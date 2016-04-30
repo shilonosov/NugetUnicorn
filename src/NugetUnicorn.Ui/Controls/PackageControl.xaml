@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="NugetUnicorn.Ui.Controls.PackageControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:NugetUnicorn.Ui.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance controls:PackageControlViewModel}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200px"></ColumnDefinition>
+            <ColumnDefinition Width="60px"></ColumnDefinition>
+            <ColumnDefinition Width="20px"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Label Grid.Column="0" Content="{Binding ControlName.Value}" />
+        <ComboBox Grid.Column="1" SelectedIndex="{Binding SelectedVersionIndex.Value}" ItemsSource="{Binding Versions}" />
+        <CheckBox Grid.Column="2" IsChecked="{Binding FixVersion.Value}"></CheckBox>
+    </Grid>
+</UserControl>
+
+
+
