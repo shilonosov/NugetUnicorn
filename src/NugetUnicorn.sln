@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetUnicorn.Business", "NugetUnicorn.Business\NugetUnicorn.Business.csproj", "{79721F58-A1BD-4B03-8958-2560EB16D1AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetUnicorn.Tests.Business", "NugetUnicorn.Tests.Business\NugetUnicorn.Tests.Business.csproj", "{E47A6D77-3E68-405C-9FDE-A8F1B84327B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetUnicorn.Ui", "NugetUnicorn.Ui\NugetUnicorn.Ui.csproj", "{F61E9174-D31D-4F27-B67D-89F3B2C4D346}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project stuff", "project stuff", "{0110084E-A08A-4E0E-8AF0-20A9869BF269}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
