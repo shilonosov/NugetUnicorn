@@ -3,7 +3,7 @@ using System.Linq;
 
 using NuGet;
 
-namespace NugetUnicorn.Business
+namespace NugetUnicorn.Business.Dto
 {
     public class PackageDto
     {

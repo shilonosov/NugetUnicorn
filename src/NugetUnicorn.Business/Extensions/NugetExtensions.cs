@@ -1,60 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
 
 using NuGet;
 
-namespace NugetUnicorn.Business
+namespace NugetUnicorn.Business.Extensions
 {
-    public static class Extensions
-    {
-        public static void IfTrue(this bool value, Action ifTrueAction)
-        {
-            if (value)
-            {
-                ifTrueAction();
-            }
-        }
-
-        public static void ForEachItem<T>(this IEnumerable<T> enumerable, Action<T> action)
-        {
-            foreach (var item in enumerable)
-            {
-                action(item);
-            }
-        }
-
-        public static IEnumerable<T> Do<T>(this IEnumerable<T> enumerable, Action<T> action)
-        {
-            var list = enumerable.ToList();
-            list.ForEachItem(action);
-            return list;
-        }
-
-        public static ICollection<T> AddRange<T>(this ICollection<T> collection, IEnumerable<T> collectionToAdd)
-        {
-            foreach (var item in collectionToAdd)
-            {
-                collection.Add(item);
-            }
-            return collection;
-        }
-    }
-
-    public static class ConsoleEx
-    {
-        public static void WriteLine(ConsoleColor color, string format, params object[] parameters)
-        {
-            var currentColor = Console.ForegroundColor;
-            //Console.ForegroundColor = color;
-            //Console.WriteLine(format, parameters);
-            Debug.WriteLine(format, parameters);
-            //Console.ForegroundColor = currentColor;
-        }
-    }
-
     public static class NugetExtensions
     {
         public static VersionSpec Intersect(this VersionSpec thisVersion, VersionSpec otherVersion)
@@ -109,5 +58,4 @@ namespace NugetUnicorn.Business
             return versionPickerFunc(first.CompareTo(second), first, second);
         }
     }
-
 }

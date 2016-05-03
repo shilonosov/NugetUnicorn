@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+using NugetUnicorn.Business.Dto;
+using NugetUnicorn.Business.Extensions;
+
 using NuGet;
 
 namespace NugetUnicorn.Business
@@ -73,6 +76,24 @@ namespace NugetUnicorn.Business
             var packageDto = new PackageDto(package);
             _storage.Put(key, packageDto);
             return packageDto;
+        }
+
+        public VersionSpec GetVersionRange(IEnumerable<PackageKey> packageKeys)
+        {
+            var keys = packageKeys as PackageKey[] ?? packageKeys.ToArray();
+            var orderedByVersion = keys.Select(x => new Tuple<PackageKey, SemanticVersion>(x, new SemanticVersion(x.Version)))
+                                              .OrderBy(x => x.Item2);
+            var existingVersions = GetById(keys.First().Id).Select(x => new Tuple<PackageKey, SemanticVersion>(x.Key, x.SemanticVersion))
+                                                           .OrderBy(x => x.Item2)
+                                                           .AsEnumerable();
+
+            var firstKey = orderedByVersion.First();
+            existingVersions = existingVersions.SkipWhile(x => x.Item2 != firstKey.Item2);
+
+            while (true)
+            {
+                
+            }
         }
     }
 }

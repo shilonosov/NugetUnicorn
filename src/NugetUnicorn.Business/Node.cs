@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NugetUnicorn.Business.Dto;
+using NugetUnicorn.Business.Extensions;
+
 namespace NugetUnicorn.Business
 {
     public class Node<T> where T: class

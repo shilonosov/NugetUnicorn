@@ -1,6 +1,6 @@
 ﻿using QuickGraph;
 
-namespace NugetUnicorn.Ui
+namespace NugetUnicorn.Ui.Business
 {
     public class GraphExample : BidirectionalGraph<DataVertex, DataEdge> { }
 }

@@ -67,8 +67,8 @@
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NuGet.Core, Version=2.10.1.766, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Core.2.10.1\lib\net40-Client\NuGet.Core.dll</HintPath>
+    <Reference Include="NuGet.Core, Version=2.11.1.812, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.11.1\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
@@ -88,15 +88,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveProperty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.2.7.1\lib\net46\ReactiveProperty.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.7.2\lib\net46\ReactiveProperty.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveProperty.DataAnnotations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.2.7.1\lib\net46\ReactiveProperty.DataAnnotations.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.7.2\lib\net46\ReactiveProperty.DataAnnotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveProperty.NET46, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.2.7.1\lib\net46\ReactiveProperty.NET46.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.7.2\lib\net46\ReactiveProperty.NET46.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -141,11 +141,11 @@
       <DependentUpon>PackageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PackageControlViewModel.cs" />
-    <Compile Include="DataEdge.cs" />
-    <Compile Include="DataVertex.cs" />
-    <Compile Include="GraphAreaExample.cs" />
-    <Compile Include="GraphExample.cs" />
-    <Compile Include="UnicornraphControlArea.cs" />
+    <Compile Include="Business\DataEdge.cs" />
+    <Compile Include="Business\DataVertex.cs" />
+    <Compile Include="Business\GraphAreaExample.cs" />
+    <Compile Include="Business\GraphExample.cs" />
+    <Compile Include="Business\UnicornraphControlArea.cs" />
     <Compile Include="Windows\MainWindowModel.cs" />
     <Page Include="Controls\PackageControl.xaml">
       <SubType>Designer</SubType>
@@ -159,7 +159,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GxLogicCoreExample.cs" />
+    <Compile Include="Business\GxLogicCoreExample.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

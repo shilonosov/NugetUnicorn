@@ -9,6 +9,9 @@ using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 
 using NugetUnicorn.Business;
+using NugetUnicorn.Business.Dto;
+using NugetUnicorn.Business.Extensions;
+using NugetUnicorn.Ui.Business;
 
 using NuGet;
 
@@ -120,15 +123,6 @@ namespace NugetUnicorn.Ui.Windows
                        .Where(x => x != null)
                        .ToList();
 
-            //packageKeys.ForEachItem(
-            //    x =>
-            //        {
-            //            var packageModel = new PackageControlModel(x, storage.GetById(x.Id).Select(y => y.Key));
-            //            var packageControl = new PackageControl();
-            //            packageControl.DataContext = new PackageControlViewModel(packageModel);
-            //            ControlsPanel.Children.Add(packageControl);
-            //        });
-
             var graph = new GraphExample();
 
             var graphNodes = new Dictionary<string, DataVertex>();
@@ -223,13 +217,7 @@ namespace NugetUnicorn.Ui.Windows
             logicCore.AsyncAlgorithmCompute = false;
 
             GgArea.LogicCore = logicCore;
-
-            //GgArea.CacheMode = new BitmapCache(2)
-            //                        {
-            //                            EnableClearType = false,
-            //                            SnapsToDevicePixels = true
-            //                        };
-
+ 
             GgArea.GenerateGraph(true, true);
 
             /* 
@@ -256,7 +244,7 @@ namespace NugetUnicorn.Ui.Windows
 
         private static string ComposeNodeKey(PackageDto packageDto)
         {
-            return packageDto.Key + "|" + string.Join("|", packageDto.Dependencies.Select(z => z.Id));
+            return packageDto.Key.Id + "|" + string.Join("|", packageDto.Dependencies.Select(z => z.Id));
         }
     }
 }

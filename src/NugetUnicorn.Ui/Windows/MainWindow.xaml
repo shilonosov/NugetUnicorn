@@ -7,6 +7,7 @@
         xmlns:graphx="http://schemas.panthernet.ru/graphx/"
         xmlns:controls="clr-namespace:NugetUnicorn.Ui.Controls"
         xmlns:windows="clr-namespace:NugetUnicorn.Ui.Windows"
+        xmlns:business="clr-namespace:NugetUnicorn.Ui.Business"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
         Title="MainWindow" Height="350" Width="800">
@@ -25,11 +26,11 @@
         </ListBox>
         
         <graphx:ZoomControl x:Name="GgZoomctrl" Grid.Column="1">
-            <local:GraphAreaExample x:Name="GgArea">
-                <local:GraphAreaExample.CacheMode>
+            <business:GraphAreaExample x:Name="GgArea">
+                <business:GraphAreaExample.CacheMode>
                     <BitmapCache RenderAtScale="2" SnapsToDevicePixels="True"/>
-                </local:GraphAreaExample.CacheMode>
-            </local:GraphAreaExample>
+                </business:GraphAreaExample.CacheMode>
+            </business:GraphAreaExample>
         </graphx:ZoomControl>
     </Grid>
 </Window>

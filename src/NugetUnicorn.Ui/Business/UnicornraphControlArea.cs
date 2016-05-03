@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-using GraphX;
-using GraphX.Controls;
-using GraphX.Controls.Models;
-
-namespace NugetUnicorn.Ui
+﻿namespace NugetUnicorn.Ui.Business
 {
     //public class UnicornraphControlArea : IGraphControlFactory
     //{

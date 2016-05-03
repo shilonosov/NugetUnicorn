@@ -1,6 +1,6 @@
 ﻿using NuGet;
 
-namespace NugetUnicorn.Business
+namespace NugetUnicorn.Business.Dto
 {
     public class PackageDependencyDto
     {

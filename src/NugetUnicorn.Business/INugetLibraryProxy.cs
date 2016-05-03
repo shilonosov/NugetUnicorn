@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using NugetUnicorn.Business.Dto;
+
 namespace NugetUnicorn.Business
 {
     public interface INugetLibraryProxy

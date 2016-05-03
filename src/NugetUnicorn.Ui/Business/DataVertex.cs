@@ -1,6 +1,6 @@
 ﻿using GraphX.PCL.Common.Models;
 
-namespace NugetUnicorn.Ui
+namespace NugetUnicorn.Ui.Business
 {
     public class DataVertex : VertexBase
     {
