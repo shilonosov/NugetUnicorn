@@ -145,7 +145,6 @@
     <Compile Include="Business\DataVertex.cs" />
     <Compile Include="Business\GraphAreaExample.cs" />
     <Compile Include="Business\GraphExample.cs" />
-    <Compile Include="Business\UnicornraphControlArea.cs" />
     <Compile Include="Windows\MainWindowModel.cs" />
     <Page Include="Controls\PackageControl.xaml">
       <SubType>Designer</SubType>

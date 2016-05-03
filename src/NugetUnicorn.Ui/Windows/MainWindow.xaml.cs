@@ -33,7 +33,7 @@ namespace NugetUnicorn.Ui.Windows
             var packageKeys = new[]
                                   {
                                       new PackageKey("NServiceBus.NHibernate", "4.5.5"),
-                                      new PackageKey("FluentNHibernate", "4.5.5"),
+                                      new PackageKey("FluentNHibernate", "1.4.0"),
                                       new PackageKey("Common.Logging", "3.3.1"),
                                       //new PackageKey("Common.Logging", "3.3.1"),
                                       new PackageKey("Common.Logging.Core", "3.3.1"),
@@ -152,20 +152,25 @@ namespace NugetUnicorn.Ui.Windows
                                     {
                                         return;
                                     }
+                                    var existing = storage.GetById(packageId)
+                                                          .Value
+                                                          .Select(z => z.Key)
+                                                          .ToList();
                                     visitedNodes.Add(packageKey);
 
                                     if (graphNodes.ContainsKey(nodeKey))
                                     {
                                         var existring = graphNodes[nodeKey];
-                                        existring.Text += " | " + packageKey.Version;
+                                        existring.AddVersion(existing, packageKey);
                                         return;
                                     }
-                                    var dataVertex = new DataVertex
+                                    var dataVertex = new DataVertex(packageId)
                                                          {
                                                              ID = nextId++,
-                                                             Text = packageKey.ToString() + Environment.NewLine,
                                                              GroupId = groupIds[packageId]
                                                          };
+                                    dataVertex.AddVersion(existing, packageKey);
+
                                     graphNodes[nodeKey] = dataVertex;
                                     graph.AddVertex(dataVertex);
                                 });

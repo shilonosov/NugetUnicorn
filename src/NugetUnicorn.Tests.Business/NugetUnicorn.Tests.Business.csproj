@@ -79,7 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NugetLibraryProxyTests.cs" />
+    <Compile Include="VersionSpecRangeBuilderTests.cs" />
     <Compile Include="VersionSpecExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
