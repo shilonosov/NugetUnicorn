@@ -40,6 +40,10 @@
     <Reference Include="Microsoft.Build.Framework">
       <HintPath>C:\Program Files (x86)\MSBuild\14.0\Bin\Microsoft.Build.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="NugetUnicorn.Business, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NugetUnicorn.Business\bin\Debug\NugetUnicorn.Business.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,12 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NugetUnicorn.Business\NugetUnicorn.Business.csproj">
-      <Project>{79721f58-a1bd-4b03-8958-2560eb16d1ad}</Project>
-      <Name>NugetUnicorn.Business</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

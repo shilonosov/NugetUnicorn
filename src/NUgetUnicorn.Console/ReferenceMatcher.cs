@@ -8,8 +8,18 @@ namespace NUgetUnicorn.Console
 {
     public class ReferenceMatcher
     {
+        private const string CONST_REFERENCE = "Reference";
+
+        private const string CONST_PRIVATE = "Private";
+
+        private const string CONST_HINTPATH = "HintPath";
+
+        private const string CONST_TRUE = "True";
+
         public class ProjectReference : ProbabilityMatch<ProjectItemInstance>
         {
+            private const string CONST_PROJECT_REFERENCE = "ProjectReference";
+
             public class ProjectMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
             {
                 public ProjectMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
@@ -20,7 +30,7 @@ namespace NUgetUnicorn.Console
 
             public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
             {
-                if (string.Equals(dataSample.ItemType, "ProjectReference"))
+                if (string.Equals(dataSample.ItemType, CONST_PROJECT_REFERENCE))
                 {
                     return new ProjectMetadata(dataSample, this, 1);
                 }
@@ -32,13 +42,13 @@ namespace NUgetUnicorn.Console
         {
             public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
             {
-                if (!string.Equals(dataSample.ItemType, "Reference"))
+                if (!string.Equals(dataSample.ItemType, CONST_REFERENCE))
                 {
                     return base.CalculateProbability(dataSample);
                 }
 
-                var isPrivate = dataSample.Metadata.Any(x => string.Equals(x.Name, "Private") && string.Equals(x.EvaluatedValue, "True"));
-                var hasHintPath = dataSample.Metadata.Any(x => string.Equals(x.Name, "HintPath"));
+                var isPrivate = dataSample.Metadata.Any(x => string.Equals(x.Name, CONST_PRIVATE) && string.Equals(x.EvaluatedValue, CONST_TRUE));
+                var hasHintPath = dataSample.Metadata.Any(x => string.Equals(x.Name, CONST_HINTPATH));
                 if (isPrivate && hasHintPath)
                 {
                     return new NugetMetadata(dataSample, this, 1d);
@@ -55,11 +65,38 @@ namespace NUgetUnicorn.Console
             }
         }
 
+        public class DllReference : ProbabilityMatch<ProjectItemInstance>
+        {
+            public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
+            {
+                if (!string.Equals(dataSample.ItemType, CONST_REFERENCE))
+                {
+                    return base.CalculateProbability(dataSample);
+                }
+
+                var isPrivate = dataSample.Metadata.Any(x => string.Equals(x.Name, CONST_PRIVATE) && string.Equals(x.EvaluatedValue, CONST_TRUE));
+                var hasHintPath = dataSample.Metadata.Any(x => string.Equals(x.Name, CONST_HINTPATH));
+                if (!isPrivate && hasHintPath)
+                {
+                    return new DllMetadata(dataSample, this, 1d);
+                }
+                return base.CalculateProbability(dataSample);
+            }
+
+            public class DllMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+            {
+                public DllMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
+                    : base(sample, match, probability)
+                {
+                }
+            }
+        }
+
         public class SystemReference : ProbabilityMatch<ProjectItemInstance>
         {
             public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
             {
-                if (!string.Equals(dataSample.ItemType, "Reference"))
+                if (!string.Equals(dataSample.ItemType, CONST_REFERENCE))
                 {
                     return base.CalculateProbability(dataSample);
                 }
@@ -83,9 +120,11 @@ namespace NUgetUnicorn.Console
 
         public class ExplicitReference : ProbabilityMatch<ProjectItemInstance>
         {
+            private const string CONST_EXPLICIT_REFERENCE = "_ExplicitReference";
+
             public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
             {
-                if (!string.Equals(dataSample.ItemType, "_ExplicitReference"))
+                if (!string.Equals(dataSample.ItemType, CONST_EXPLICIT_REFERENCE))
                 {
                     return base.CalculateProbability(dataSample);
                 }
