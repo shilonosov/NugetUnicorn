@@ -1,4 +1,4 @@
-namespace NugetUnicorn.Business.FuzzyMatcher
+namespace NugetUnicorn.Business.FuzzyMatcher.Engine
 {
     public class NoneProbabilityMatch<T> : ProbabilityMatch<T>
     {

@@ -1,4 +1,4 @@
-namespace NugetUnicorn.Business.FuzzyMatcher
+namespace NugetUnicorn.Business.FuzzyMatcher.Engine
 {
     public abstract class SomeProbabilityMatchMetadata<T> : ProbabilityMatchMetadata<T>
     {

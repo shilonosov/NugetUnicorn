@@ -3,9 +3,9 @@ using System.Linq;
 
 using NugetUnicorn.Business.Extensions;
 
-namespace NugetUnicorn.Business.FuzzyMatcher
+namespace NugetUnicorn.Business.FuzzyMatcher.Engine
 {
-    public class ProbabilityMatchEngine<T>
+    public class ProbabilityMatchEngine<T> : IProbabilityMatchEngine<T>
     {
         private readonly IList<ProbabilityMatch<T>> _matchList;
 

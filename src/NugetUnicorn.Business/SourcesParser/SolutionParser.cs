@@ -6,9 +6,9 @@ using Microsoft.Build.Execution;
 
 namespace NugetUnicorn.Business.SourcesParser
 {
-    public class NugetPackagesCollector
+    public class SolutionParser
     {
-        public static IEnumerable<ProjectInstance> Parse(string solutionFilePath)
+        public static IEnumerable<ProjectInstance> GetProjects(string solutionFilePath)
         {
             var solutionFile = SolutionFile.Parse(solutionFilePath);
             return solutionFile.ProjectsInOrder

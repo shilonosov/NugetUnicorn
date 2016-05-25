@@ -83,14 +83,17 @@
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\EnumerableSwitch\IEnumerableSwitch.cs" />
     <Compile Include="Extensions\NugetExtensions.cs" />
-    <Compile Include="FuzzyMatcher\NoneProbabilityMatch.cs" />
-    <Compile Include="FuzzyMatcher\NonePropabilityMatchMetadata.cs" />
-    <Compile Include="FuzzyMatcher\ProbabilityMatch.cs" />
-    <Compile Include="FuzzyMatcher\ProbabilityMatchEngine.cs" />
-    <Compile Include="FuzzyMatcher\ProbabilityMatchMetadata.cs" />
-    <Compile Include="FuzzyMatcher\SomeProbabilityMatchMetadata.cs" />
+    <Compile Include="FuzzyMatcher\Engine\IProbabilityMatchEngine.cs" />
+    <Compile Include="FuzzyMatcher\Engine\NoneProbabilityMatch.cs" />
+    <Compile Include="FuzzyMatcher\Engine\NonePropabilityMatchMetadata.cs" />
+    <Compile Include="FuzzyMatcher\Engine\ProbabilityMatch.cs" />
+    <Compile Include="FuzzyMatcher\Engine\ProbabilityMatchEngine.cs" />
+    <Compile Include="FuzzyMatcher\Engine\ProbabilityMatchMetadata.cs" />
+    <Compile Include="FuzzyMatcher\Engine\SomeProbabilityMatchMetadata.cs" />
     <Compile Include="INugetLibraryProxy.cs" />
     <Compile Include="IStorage.cs" />
+    <Compile Include="Microsoft\Build\ProjectInstanceExtensions.cs" />
+    <Compile Include="Microsoft\Build\ProjectItemInstanceExtensions.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NugetLibraryProxy.cs" />
     <Compile Include="Dto\PackageDependencyDto.cs" />
@@ -99,7 +102,7 @@
     <Compile Include="PackageInspector.cs" />
     <Compile Include="PackageKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SourcesParser\NugetPackagesCollector.cs" />
+    <Compile Include="SourcesParser\SolutionParser.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="VersionSpecRangeBuilder.cs" />
   </ItemGroup>
@@ -108,6 +111,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

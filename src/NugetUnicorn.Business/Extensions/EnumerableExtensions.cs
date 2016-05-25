@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NugetUnicorn.Business.Extensions.EnumerableSwitch;
+using NugetUnicorn.Business.FuzzyMatcher.Engine;
 
 namespace NugetUnicorn.Business.Extensions
 {
@@ -32,6 +33,11 @@ namespace NugetUnicorn.Business.Extensions
         {
             list.ForEachItem(action);
             return list;
+        }
+
+        public static IEnumerable<ProbabilityMatchMetadata<T>> FindBestMatch<T>(this IEnumerable<T> enumerabe, IProbabilityMatchEngine<T> probabilityMatchEngine)
+        {
+            return enumerabe.Select(probabilityMatchEngine.FindBestMatch);
         }
     }
 }
