@@ -11,7 +11,12 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
         Title="MainWindow" Height="350" Width="800">
-    <Grid>
+    <TabControl>
+        <TabItem Header="Your Solution">
+            
+        </TabItem>
+        <TabItem Header="Fancy Graphs">
+            <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300px"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -33,4 +38,6 @@
             </business:GraphAreaExample>
         </graphx:ZoomControl>
     </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

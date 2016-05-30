@@ -39,5 +39,13 @@ namespace NugetUnicorn.Business.Extensions
         {
             return enumerabe.Select(probabilityMatchEngine.FindBestMatch);
         }
+
+        public static IEnumerable<TV> FindBestMatch<T, TV>(this IEnumerable<T> enumerabe, IProbabilityMatchEngine<T> probabilityMatchEngine, double threshold)
+            where TV : ProbabilityMatchMetadata<T>
+        {
+            return enumerabe.Select(probabilityMatchEngine.FindBestMatch)
+                            .OfType<TV>()
+                            .Where(x => x.Probability > threshold);
+        }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.Build.Execution;
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.Microsoft.Build;
 
-namespace NUgetUnicorn.Console
+namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {
     public class WrongReferenceMatcher : ProbabilityMatch<ReferenceMatcher.DllReference.DllMetadata>
     {

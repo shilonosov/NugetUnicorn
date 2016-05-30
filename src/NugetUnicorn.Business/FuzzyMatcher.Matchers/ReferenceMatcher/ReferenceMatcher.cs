@@ -2,10 +2,9 @@ using System.Linq;
 
 using Microsoft.Build.Execution;
 
-using NugetUnicorn.Business.FuzzyMatcher;
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 
-namespace NUgetUnicorn.Console
+namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {
     public class ReferenceMatcher
     {
