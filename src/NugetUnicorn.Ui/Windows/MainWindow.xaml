@@ -13,7 +13,14 @@
         Title="MainWindow" Height="350" Width="800">
     <TabControl>
         <TabItem Header="Your Solution">
-            
+            <DockPanel>
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" DockPanel.Dock="Bottom">
+                    <Label DockPanel.Dock="Left" VerticalAlignment="Center">Solution to inspect:</Label>
+                    <Button DockPanel.Dock="Right" Margin="10,0,0,0" Padding="3,0" Command="{Binding SelectSolutionCommand}">Select</Button>
+                    <TextBox Margin="10,0,0,0" Text="{Binding SelectedSolutionProperty.Value}"/> 
+                </DockPanel>
+                <RichTextBox></RichTextBox>
+            </DockPanel>
         </TabItem>
         <TabItem Header="Fancy Graphs">
             <Grid>
