@@ -4,7 +4,7 @@ using System.Linq;
 using NugetUnicorn.Business;
 using NugetUnicorn.Ui.Controls;
 
-namespace NugetUnicorn.Ui.Windows
+namespace NugetUnicorn.Ui.Models
 {
     public class MainWindowModel
     {

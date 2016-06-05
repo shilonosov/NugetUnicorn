@@ -12,6 +12,8 @@ using NugetUnicorn.Business;
 using NugetUnicorn.Business.Dto;
 using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Ui.Business;
+using NugetUnicorn.Ui.Models;
+using NugetUnicorn.Ui.ViewModels;
 
 using NuGet;
 

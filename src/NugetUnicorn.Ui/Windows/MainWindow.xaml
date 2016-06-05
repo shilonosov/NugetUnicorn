@@ -8,8 +8,9 @@
         xmlns:controls="clr-namespace:NugetUnicorn.Ui.Controls"
         xmlns:windows="clr-namespace:NugetUnicorn.Ui.Windows"
         xmlns:business="clr-namespace:NugetUnicorn.Ui.Business"
+        xmlns:viewModels="clr-namespace:NugetUnicorn.Ui.ViewModels"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="MainWindow" Height="350" Width="800">
     <TabControl>
         <TabItem Header="Your Solution">

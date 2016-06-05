@@ -7,10 +7,11 @@ using Microsoft.Win32;
 using NugetUnicorn.Business.SourcesParser;
 using NugetUnicorn.Ui.Business.ReactivePropertyExtensions.Bridge;
 using NugetUnicorn.Ui.Controls;
+using NugetUnicorn.Ui.Models;
 
 using Reactive.Bindings;
 
-namespace NugetUnicorn.Ui.Windows
+namespace NugetUnicorn.Ui.ViewModels
 {
     public class MainWindowViewModel
     {

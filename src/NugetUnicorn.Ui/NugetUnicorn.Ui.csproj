@@ -151,8 +151,8 @@
     <Compile Include="Business\ReactivePropertyExtensions\Abstract\IOnCompleteStrategy.cs" />
     <Compile Include="Business\ReactivePropertyExtensions\Abstract\IOnErrorStrategy.cs" />
     <Compile Include="Business\ReactivePropertyExtensions\Abstract\IOnNextStategy.cs" />
-    <Compile Include="Windows\MainWindowModel.cs" />
-    <Compile Include="Windows\MainWindowViewModel.cs" />
+    <Compile Include="Models\MainWindowModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnCompleteStrategyIgnore.cs" />
     <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnErrorStrategyIgnore.cs" />
     <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnNextStrategyConcatenateStrigns.cs" />
