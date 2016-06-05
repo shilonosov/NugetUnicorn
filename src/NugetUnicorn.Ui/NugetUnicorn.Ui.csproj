@@ -121,6 +121,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -147,7 +148,18 @@
     <Compile Include="Business\DataVertex.cs" />
     <Compile Include="Business\GraphAreaExample.cs" />
     <Compile Include="Business\GraphExample.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Abstract\IOnCompleteStrategy.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Abstract\IOnErrorStrategy.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Abstract\IOnNextStategy.cs" />
     <Compile Include="Windows\MainWindowModel.cs" />
+    <Compile Include="Windows\MainWindowViewModel.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnCompleteStrategyIgnore.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnErrorStrategyIgnore.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnNextStrategyConcatenateStrigns.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Strategies\OnNextStrategyReplace.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Abstract\ReactivePropertyObserverBridge.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Bridge\ReactivePropertyObserverBridgeStringAdd.cs" />
+    <Compile Include="Business\ReactivePropertyExtensions\Bridge\ReactivePropertyObserverBridgeStringReplace.cs" />
     <Page Include="Controls\PackageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -212,6 +224,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
