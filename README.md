@@ -6,3 +6,7 @@ This is suppose to be a usefult tool for .net developers. Espetially for those w
 Once I've found myself struggling with a number of packages and their version restrictions, so I had to write all those version to a piece of paper to find what package can use what version.
 
 So, as I am a bit lazy, I decided to write a tool that would do this (and some other stuff) for me.
+
+# Licence
+
+It`s MIT license (is that enough?).
