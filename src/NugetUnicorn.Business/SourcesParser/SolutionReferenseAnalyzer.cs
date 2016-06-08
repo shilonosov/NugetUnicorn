@@ -64,16 +64,25 @@ namespace NugetUnicorn.Business.SourcesParser
             var nugetPackageFileParser = new ProbabilityMatchEngine<ProjectItemInstance>();
             nugetPackageFileParser.With(new NugetPackageFileMatcher());
 
-            projects.Select(
+            var dllMetadatas = projects.Select(
                 x =>
                     {
                         observer.OnNext($"starting analysis of the {x.GetProjectName()} project...");
                         return x.Items;
                     })
-                    .SelectMany(x => x)
-                    .FindBestMatch<ProjectItemInstance, ReferenceMatcher.DllReference.DllMetadata>(referenceMatcher, 0d)
-                    .FindBestMatch<ReferenceMatcher.DllReference.DllMetadata, WrongReferenceMatcher.WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d)
-                    .Do(x => observer.OnNext($"found possible misreference: {x.Project.GetProjectName()} to {x.Reference} (solution contains project with the same target name: {x.SuspectedProject.GetProjectName()} / {x.SuspectedProject.GetTargetFileName()})"));
+                                        .SelectMany(x => x)
+                                        .FindBestMatch<ProjectItemInstance, ReferenceMatcher.DllReference.DllMetadata>(referenceMatcher, 0d);
+            dllMetadatas.FindBestMatch<ReferenceMatcher.DllReference.DllMetadata, WrongReferenceMatcher.WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d)
+                        .Do(x => observer.OnNext($"found possible misreference: {x.Project.GetProjectName()} to {x.Reference} (solution contains project with the same target name: {x.SuspectedProject.GetProjectName()} / {x.SuspectedProject.GetTargetFileName()})"));
+
+            // "System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+            // projects.First().GetItems("Reference").ToArray()[7].GetMetadataValue("Identity")
+
+            var appConfigFileParser = new ProbabilityMatchEngine<ProjectItemInstance>();
+            appConfigFileParser.With(new AppConfigFileReferenceMatcher());
+            var projectBindings = projects.ToDictionary(x => x.GetProjectName(), x => x.Items.FindBestMatch<ProjectItemInstance, AppConfigFileReferenceMatcher.AppConfigFilePropabilityMetadata>(appConfigFileParser, 0d));
+            projectBindings.Do(x => x.Value.Do(y => observer.OnNext($"{string.Join(" ", y.RedirectModels.Select(z => z.Identity + " " + z.NewVersion))}")));
+
             observer.OnNext("analysis completed.");
             observer.OnCompleted();
         }
