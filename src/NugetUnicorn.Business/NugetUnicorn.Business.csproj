@@ -80,13 +80,16 @@
     <Compile Include="Extensions\BooleanExtensions.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ConsoleEx.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EnumerableSwitch\EnumerableSwitch.cs" />
     <Compile Include="Extensions\EnumerableSwitch\EnumerableSwitchCase.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\EnumerableSwitch\IEnumerableSwitch.cs" />
     <Compile Include="Extensions\NugetExtensions.cs" />
-    <Compile Include="FuzzyMatcher.Matchers\NugetPackageFileMatcher.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\AppConfigFileReferenceMatcher.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\NugetPackageFileMatcher.cs" />
+    <Compile Include="Extensions\XmlNodeExtensions.cs" />
     <Compile Include="FuzzyMatcher\Engine\IProbabilityMatchEngine.cs" />
     <Compile Include="FuzzyMatcher\Engine\NoneProbabilityMatch.cs" />
     <Compile Include="FuzzyMatcher\Engine\NonePropabilityMatchMetadata.cs" />

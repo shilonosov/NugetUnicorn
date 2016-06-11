@@ -23,6 +23,8 @@ namespace NugetUnicorn.Ui.ViewModels
 
         public ReactiveProperty<string> ReportString { get; }
 
+        public ReactiveProperty<bool> UiSwitch { get; }
+
         public MainWindowViewModel(MainWindowModel model)
         {
             Packages = model.PackageKeys
@@ -30,18 +32,21 @@ namespace NugetUnicorn.Ui.ViewModels
                             .ToObservable()
                             .ToReactiveCollection();
 
+            UiSwitch = new ReactiveProperty<bool>(true);
+
             SelectedSolutionProperty = new ReactiveProperty<string>();
             var reactivePropertyObserverBridgeStringReplace = new ReactivePropertyObserverBridgeStringReplace(SelectedSolutionProperty);
 
             ReportString = new ReactiveProperty<string>(string.Empty);
             var reactivePropertyObserverBridgeStringAdd = new ReactivePropertyObserverBridgeStringAdd(ReportString);
 
-            SelectSolutionCommand = new ReactiveCommand();
+            SelectSolutionCommand = new ReactiveCommand(UiSwitch);
             SelectSolutionCommand.Select(x => SelectSolutionToInspect())
                                  .Where(x => x != null)
+                                 .Do(x => UiSwitch.Value = false)
                                  .Do(reactivePropertyObserverBridgeStringReplace)
                                  .Select(x => new SolutionReferenseAnalyzer(new NewThreadScheduler(), x).Subscribe())
-                                 .SelectMany(x => x)
+                                 .SelectMany(x => x.Finally(() => UiSwitch.Value = true))
                                  .Timestamp()
                                  .Select(x => $"[{x.Timestamp.ToString("s")}] {x.Value}")
                                  .Subscribe(reactivePropertyObserverBridgeStringAdd);

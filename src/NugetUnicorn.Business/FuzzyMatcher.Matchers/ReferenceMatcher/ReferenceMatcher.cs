@@ -1,13 +1,60 @@
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
+using NugetUnicorn.Business.Microsoft.Build;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {
     public class ReferenceMatcher
     {
+        public class ReferenceInformation
+        {
+            public string AssemblyName { get; private set; }
+            public string Version { get; private set; }
+
+            public ReferenceInformation(string fullPath)
+            {
+                var assembly = Assembly.LoadFile(fullPath);
+                var assemblyName = assembly.GetName();
+                AssemblyName = assemblyName.Name;
+                Version = assemblyName.Version.ToString();
+            }
+
+            public ReferenceInformation(string assemblyName, string version)
+            {
+                AssemblyName = assemblyName;
+                Version = version;
+            }
+
+            public override string ToString()
+            {
+                return $"{AssemblyName}, {Version}";
+            }
+        }
+
+        public abstract class ReferenceMetadataBase : SomeProbabilityMatchMetadata<ProjectItemInstance>
+        {
+            protected ReferenceMetadataBase(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
+                : base(sample, match, probability)
+            {
+            }
+        }
+
+        public abstract class ExistingReferenceMetadataBase : ReferenceMetadataBase
+        {
+            protected ExistingReferenceMetadataBase(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
+                : base(sample, match, probability)
+            {
+            }
+
+            public abstract ReferenceInformation GetReferenceInformation();
+        }
+
         private const string CONST_REFERENCE = "Reference";
 
         private const string CONST_PRIVATE = "Private";
@@ -20,11 +67,16 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
         {
             private const string CONST_PROJECT_REFERENCE = "ProjectReference";
 
-            public class ProjectMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+            public class ProjectMetadata : ExistingReferenceMetadataBase
             {
                 public ProjectMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
                     : base(sample, match, probability)
                 {
+                }
+
+                public override ReferenceInformation GetReferenceInformation()
+                {
+                    return new ReferenceInformation("i am no implement", "implement me");
                 }
             }
 
@@ -56,11 +108,19 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
                 return base.CalculateProbability(dataSample);
             }
 
-            public class NugetMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+            public class NugetMetadata : ExistingReferenceMetadataBase
             {
                 public NugetMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
                     : base(sample, match, probability)
                 {
+                }
+
+                public override ReferenceInformation GetReferenceInformation()
+                {
+                    var directory = Sample.GetMetadataValue("RootDir") + Sample.GetMetadataValue("Directory");
+                    var relativePath = Sample.GetHintPath();
+                    var fullPath = Path.Combine(directory, relativePath);
+                    return new ReferenceInformation(fullPath);
                 }
             }
         }
@@ -83,17 +143,26 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
                 return base.CalculateProbability(dataSample);
             }
 
-            public class DllMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+            public class DllMetadata : ExistingReferenceMetadataBase
             {
                 public DllMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
                     : base(sample, match, probability)
                 {
+                }
+
+                public override ReferenceInformation GetReferenceInformation()
+                {
+                    var directory = Sample.GetMetadataValue("RootDir") + Sample.GetMetadataValue("Directory");
+                    var relativePath = Sample.GetHintPath();
+                    var fullPath = Path.Combine(directory, relativePath);
+                    return new ReferenceInformation(fullPath);
                 }
             }
         }
 
         public class SystemReference : ProbabilityMatch<ProjectItemInstance>
         {
+            //todo: check if this condition is valid
             public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
             {
                 if (!string.Equals(dataSample.ItemType, CONST_REFERENCE))
@@ -109,7 +178,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
                 return base.CalculateProbability(dataSample);
             }
 
-            public class SystemMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+            public class SystemMetadata : ReferenceMetadataBase
             {
                 public SystemMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
                     : base(sample, match, probability)
@@ -137,7 +206,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
                 return base.CalculateProbability(dataSample);
             }
 
-            public class ExplicitMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+            public class ExplicitMetadata : ReferenceMetadataBase
             {
                 public ExplicitMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability)
                     : base(sample, match, probability)

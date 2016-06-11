@@ -7,6 +7,7 @@ using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
+using NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers;
 using NugetUnicorn.Business.Microsoft.Build;
 using NugetUnicorn.Business.SourcesParser;
 
