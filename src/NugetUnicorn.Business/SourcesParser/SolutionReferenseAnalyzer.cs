@@ -46,45 +46,55 @@ namespace NugetUnicorn.Business.SourcesParser
 
         private static void AnalyzeInternal(string solutionPath, IObserver<string> observer)
         {
-            observer.OnNext("--==--");
-
-            observer.OnNext($"starting the {solutionPath} analysis...");
-            observer.OnNext("parsing the solution...");
-            var projects = SolutionParser.GetProjects(solutionPath)
-                                         .ToList();
-
-            observer.OnNext("parsed.");
-
-            var referenceMatcher = new ProbabilityMatchEngine<ProjectItemInstance>();
-            referenceMatcher.With(new ReferenceMatcher.NugetReference())
-                            .With(new ReferenceMatcher.SystemReference())
-                            .With(new ReferenceMatcher.ExplicitReference())
-                            .With(new ReferenceMatcher.DllReference())
-                            .With(new ReferenceMatcher.ProjectReference());
-
-            var wrongReferenceMatcher = new ProbabilityMatchEngine<ReferenceMatcher.DllReference.DllMetadata>();
-            wrongReferenceMatcher.With(new WrongReferenceMatcher(projects));
-
-            var referenceMetadatas = projects.ToDictionary(
-                x => x.GetProjectName(),
-                x => x.Items.FindBestMatch<ProjectItemInstance, ReferenceMatcher.ReferenceMetadataBase>(referenceMatcher, 0d));
-
-            var projectReferenceVsDirectDllReference = ComposeProjectReferenceErrors(referenceMetadatas, wrongReferenceMatcher);
-            var incorrectReferences = ComposeBindingsErrors(projects, referenceMetadatas);
-
-            var errorReport = projectReferenceVsDirectDllReference.Merge(incorrectReferences);
-            foreach (var item in errorReport)
+            try
             {
-                observer.OnNext($"project: {item.Key} report:");
-                item.Value
-                    .DoIfEmpty(() => observer.OnNext("all seems to be ok"))
-                    .Do(x => observer.OnNext($"possible issue: {x}"));
-            }
+                observer.OnNext("--==--");
 
-            observer.OnNext("analysis completed.");
-            observer.OnNext("");
-            observer.OnCompleted();
-        }
+                observer.OnNext($"starting the {solutionPath} analysis...");
+                observer.OnNext("parsing the solution...");
+                var projects = SolutionParser.GetProjects(solutionPath)
+                    .ToList();
+
+                observer.OnNext("parsed.");
+
+                var referenceMatcher = new ProbabilityMatchEngine<ProjectItemInstance>();
+                referenceMatcher.With(new ReferenceMatcher.NugetReference())
+                    .With(new ReferenceMatcher.SystemReference())
+                    .With(new ReferenceMatcher.ExplicitReference())
+                    .With(new ReferenceMatcher.DllReference())
+                    .With(new ReferenceMatcher.ProjectReference());
+
+                var wrongReferenceMatcher = new ProbabilityMatchEngine<ReferenceMatcher.DllReference.DllMetadata>();
+                wrongReferenceMatcher.With(new WrongReferenceMatcher(projects));
+
+                var referenceMetadatas = projects.ToDictionary(
+                    x => x.GetProjectName(),
+                    x =>
+                        x.Items.FindBestMatch<ProjectItemInstance, ReferenceMatcher.ReferenceMetadataBase>(
+                            referenceMatcher, 0d));
+
+                var projectReferenceVsDirectDllReference = ComposeProjectReferenceErrors(referenceMetadatas,
+                    wrongReferenceMatcher);
+                var incorrectReferences = ComposeBindingsErrors(projects, referenceMetadatas);
+
+                var errorReport = projectReferenceVsDirectDllReference.Merge(incorrectReferences);
+                foreach (var item in errorReport)
+                {
+                    observer.OnNext($"project: {item.Key} report:");
+                    item.Value
+                        .DoIfEmpty(() => observer.OnNext("all seems to be ok"))
+                        .Do(x => observer.OnNext($"possible issue: {x}"));
+                }
+
+                observer.OnNext("analysis completed.");
+                observer.OnNext("");
+                observer.OnCompleted();
+            }
+            catch (Exception e)
+            {
+                observer.OnError(e);
+            }
+    }
 
         private static IDictionary<string, IEnumerable<string>> ComposeProjectReferenceErrors(
             IDictionary<string, IEnumerable<ReferenceMatcher.ReferenceMetadataBase>> referenceMetadatas,

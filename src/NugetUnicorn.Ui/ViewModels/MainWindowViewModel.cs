@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -10,6 +11,7 @@ using NugetUnicorn.Ui.Controls;
 using NugetUnicorn.Ui.Models;
 
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace NugetUnicorn.Ui.ViewModels
 {
@@ -49,6 +51,7 @@ namespace NugetUnicorn.Ui.ViewModels
                                  .SelectMany(x => x.Finally(() => UiSwitch.Value = true))
                                  .Timestamp()
                                  .Select(x => $"[{x.Timestamp.ToString("s")}] {x.Value}")
+                                 .Catch<string, Exception>(x => Observable.Return($"error: {x.Message}"))
                                  .Subscribe(reactivePropertyObserverBridgeStringAdd);
         }
 
