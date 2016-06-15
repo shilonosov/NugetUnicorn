@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.Extensions;
@@ -20,7 +21,7 @@ namespace NUgetUnicorn.Console
             //[DS] absolute path required
             var projects = SolutionParser.GetProjects(@"D:\dev\Projects\NugetUnicorn\src\NugetUnicorn.sln")
                                          .ToList();
-            var referenceMatcher = new ProbabilityMatchEngine<ProjectItemInstance>();
+            var referenceMatcher = new ProbabilityMatchEngine<ProjectItem>();
             referenceMatcher.With(new ReferenceMatcher.NugetReference())
                             .With(new ReferenceMatcher.SystemReference())
                             .With(new ReferenceMatcher.ExplicitReference())
@@ -38,16 +39,16 @@ namespace NUgetUnicorn.Console
                         return x.Items;
                     })
                     .SelectMany(x => x)
-                    .FindBestMatch<ProjectItemInstance, ReferenceMatcher.DllReference.DllMetadata>(referenceMatcher, 0d)
+                    .FindBestMatch<ProjectItem, ReferenceMatcher.DllReference.DllMetadata>(referenceMatcher, 0d)
                     .FindBestMatch<ReferenceMatcher.DllReference.DllMetadata, WrongReferenceMatcher.WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d)
                     .Do(
                         x => { ConsoleEx.WriteLine(ConsoleColor.Red, $"{x.Probability} -- {x.Project.GetProjectName()} to {x.Reference} ({x.SuspectedProject.GetProjectName()})"); });
 
-            var nugetPackageFileParser = new ProbabilityMatchEngine<ProjectItemInstance>();
+            var nugetPackageFileParser = new ProbabilityMatchEngine<ProjectItem>();
             nugetPackageFileParser.With(new NugetPackageFileMatcher());
 
             projects.SelectMany(x => x.Items)
-                    .FindBestMatch<ProjectItemInstance, NugetPackageFileMatcher.NugetPackageFilePropabilityMetadata>(nugetPackageFileParser, 0d)
+                    .FindBestMatch<ProjectItem, NugetPackageFileMatcher.NugetPackageFilePropabilityMetadata>(nugetPackageFileParser, 0d)
                     .Do(x => { System.Console.WriteLine($"{x.FullPath}"); });
 
             System.Console.ReadLine();

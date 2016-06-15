@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.Extensions;
@@ -57,7 +58,7 @@ namespace NugetUnicorn.Business.SourcesParser
 
                 observer.OnNext("parsed.");
 
-                var referenceMatcher = new ProbabilityMatchEngine<ProjectItemInstance>();
+                var referenceMatcher = new ProbabilityMatchEngine<ProjectItem>();
                 referenceMatcher.With(new ReferenceMatcher.NugetReference())
                     .With(new ReferenceMatcher.SystemReference())
                     .With(new ReferenceMatcher.ExplicitReference())
@@ -70,7 +71,7 @@ namespace NugetUnicorn.Business.SourcesParser
                 var referenceMetadatas = projects.ToDictionary(
                     x => x.GetProjectName(),
                     x =>
-                        x.Items.FindBestMatch<ProjectItemInstance, ReferenceMatcher.ReferenceMetadataBase>(
+                        x.Items.FindBestMatch<ProjectItem, ReferenceMatcher.ReferenceMetadataBase>(
                             referenceMatcher, 0d));
 
                 var projectReferenceVsDirectDllReference = ComposeProjectReferenceErrors(referenceMetadatas,
@@ -115,18 +116,18 @@ namespace NugetUnicorn.Business.SourcesParser
                                              $"found possible misreference: {y.Reference} (solution contains project with the same target name: {y.SuspectedProject.GetProjectName()} / {y.SuspectedProject.GetTargetFileName()})"));
         }
 
-        private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ComposeBindingsErrors(IList<ProjectInstance> projects,
+        private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ComposeBindingsErrors(IList<Project> projects,
                                                                                                     IDictionary<string, IEnumerable<ReferenceMatcher.ReferenceMetadataBase>>
                                                                                                         referenceMetadatas)
         {
             var referencesByProjects = referenceMetadatas.Transform(x => x.OfType<ReferenceMatcher.ExistingReferenceMetadataBase>())
                                                          .Transform(x => x.Select(y => y.GetReferenceInformation()));
 
-            var appConfigFileParser = new ProbabilityMatchEngine<ProjectItemInstance>();
+            var appConfigFileParser = new ProbabilityMatchEngine<ProjectItem>();
             appConfigFileParser.With(new AppConfigFileReferenceMatcher());
             var projectBindings = projects.ToDictionary(
                 x => x.GetProjectName(),
-                x => x.Items.FindBestMatch<ProjectItemInstance, AppConfigFileReferenceMatcher.AppConfigFilePropabilityMetadata>(appConfigFileParser, 0d))
+                x => x.Items.FindBestMatch<ProjectItem, AppConfigFileReferenceMatcher.AppConfigFilePropabilityMetadata>(appConfigFileParser, 0d))
                                           .Transform(x => x.SelectMany(y => y.RedirectModels));
 
             return projectBindings.Join(

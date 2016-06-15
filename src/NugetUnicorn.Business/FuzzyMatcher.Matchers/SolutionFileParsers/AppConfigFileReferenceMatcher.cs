@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.Extensions;
@@ -10,7 +11,7 @@ using NugetUnicorn.Business.FuzzyMatcher.Engine;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 {
-    public class AppConfigFileReferenceMatcher : ProbabilityMatch<ProjectItemInstance>
+    public class AppConfigFileReferenceMatcher : ProbabilityMatch<ProjectItem>
     {
         private const string CONST_ITEM_TYPE_NONE = "None";
 
@@ -22,14 +23,14 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 
         private const string CONST_METADATA_NAME_FULLPATH = "FullPath";
 
-        public override ProbabilityMatchMetadata<ProjectItemInstance> CalculateProbability(ProjectItemInstance dataSample)
+        public override ProbabilityMatchMetadata<ProjectItem> CalculateProbability(ProjectItem dataSample)
         {
             if (!string.Equals(dataSample.ItemType, CONST_ITEM_TYPE_NONE))
             {
                 return base.CalculateProbability(dataSample);
             }
 
-            var hasFilename = dataSample.MetadataNames.Any(x => string.Equals(x, CONST_METADATA_NAME_FILENAME));
+            var hasFilename = dataSample.Metadata.Any(x => string.Equals(x.Name, CONST_METADATA_NAME_FILENAME));
             if (!hasFilename)
             {
                 return base.CalculateProbability(dataSample);
@@ -41,7 +42,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
                 return base.CalculateProbability(dataSample);
             }
 
-            var hasFullPath = dataSample.MetadataNames.Any(x => string.Equals(x, CONST_METADATA_NAME_FULLPATH));
+            var hasFullPath = dataSample.Metadata.Any(x => string.Equals(x.Name, CONST_METADATA_NAME_FULLPATH));
             if (!hasFullPath)
             {
                 return base.CalculateProbability(dataSample);
@@ -56,7 +57,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
             return new AppConfigFilePropabilityMetadata(dataSample, this, 1d, fullPath);
         }
 
-        public class AppConfigFilePropabilityMetadata : SomeProbabilityMatchMetadata<ProjectItemInstance>
+        public class AppConfigFilePropabilityMetadata : SomeProbabilityMatchMetadata<ProjectItem>
         {
             public class BindingRedirectModel
             {
@@ -83,7 +84,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 
             public IList<BindingRedirectModel> RedirectModels { get; private set; }
 
-            public AppConfigFilePropabilityMetadata(ProjectItemInstance sample, ProbabilityMatch<ProjectItemInstance> match, double probability, string fullPath)
+            public AppConfigFilePropabilityMetadata(ProjectItem sample, ProbabilityMatch<ProjectItem> match, double probability, string fullPath)
                 : base(sample, match, probability)
             {
                 FullPath = fullPath;

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 
 namespace NugetUnicorn.Business.Microsoft.Build
@@ -9,16 +10,16 @@ namespace NugetUnicorn.Business.Microsoft.Build
     {
         private const string CONST_HINTPATH = "HintPath";
 
-        public static string GetHintPath(this ProjectItemInstance projectItemInstance)
+        public static string GetHintPath(this ProjectItem projectItem)
         {
-            return projectItemInstance?.Metadata
+            return projectItem?.Metadata
                                        .FirstOrDefault(x => string.Equals(x.Name, CONST_HINTPATH))?
                                        .EvaluatedValue;
         }
 
-        public static string GetMetadataPrintStrign(this ProjectItemInstance projectItemInstance)
+        public static string GetMetadataPrintStrign(this ProjectItem projectItem)
         {
-            return string.Join(Environment.NewLine, projectItemInstance.MetadataNames.Select(x => $"{x}: {projectItemInstance.GetMetadataValue(x)}"));
+            return string.Join(Environment.NewLine, projectItem.Metadata.Select(x => $"{x.Name}: {x}"));
         }
     }
 }

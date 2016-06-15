@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
@@ -11,9 +12,9 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {
     public class WrongReferenceMatcher : ProbabilityMatch<ReferenceMatcher.DllReference.DllMetadata>
     {
-        private readonly IDictionary<string, ProjectInstance> _projectsCollection;
+        private readonly IDictionary<string, Project> _projectsCollection;
 
-        public WrongReferenceMatcher(IEnumerable<ProjectInstance> projectsCollection)
+        public WrongReferenceMatcher(IEnumerable<Project> projectsCollection)
         {
             _projectsCollection = projectsCollection.ToDictionary(x => x.GetTargetFileName(), x => x);
         }
@@ -33,11 +34,11 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 
         public class WrongReferencePropabilityMetadata : SomeProbabilityMatchMetadata<ReferenceMatcher.DllReference.DllMetadata>
         {
-            public ProjectInstance Project { get; }
-            public ProjectInstance SuspectedProject { get; }
+            public Project Project { get; }
+            public Project SuspectedProject { get; }
             public string Reference { get; }
 
-            public WrongReferencePropabilityMetadata(ReferenceMatcher.DllReference.DllMetadata sample, ProbabilityMatch<ReferenceMatcher.DllReference.DllMetadata> match, double probability, string sampleProjectPath, ProjectInstance suspectedProject)
+            public WrongReferencePropabilityMetadata(ReferenceMatcher.DllReference.DllMetadata sample, ProbabilityMatch<ReferenceMatcher.DllReference.DllMetadata> match, double probability, string sampleProjectPath, Project suspectedProject)
                 : base(sample, match, probability)
             {
                 Project = sample.Sample.Project;
