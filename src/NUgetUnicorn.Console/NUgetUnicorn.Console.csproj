@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accord.Neuro">
+      <HintPath>..\Accord.Neuro.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Build">
       <HintPath>C:\Program Files (x86)\MSBuild\14.0\Bin\Microsoft.Build.dll</HintPath>
     </Reference>

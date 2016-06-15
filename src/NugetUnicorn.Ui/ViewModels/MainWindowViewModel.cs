@@ -11,7 +11,6 @@ using NugetUnicorn.Ui.Controls;
 using NugetUnicorn.Ui.Models;
 
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace NugetUnicorn.Ui.ViewModels
 {
@@ -47,12 +46,18 @@ namespace NugetUnicorn.Ui.ViewModels
                                  .Where(x => x != null)
                                  .Do(x => UiSwitch.Value = false)
                                  .Do(reactivePropertyObserverBridgeStringReplace)
-                                 .Select(x => new SolutionReferenseAnalyzer(new NewThreadScheduler(), x).Subscribe())
-                                 .SelectMany(x => x.Finally(() => UiSwitch.Value = true))
+                                 .Select(Anazyle)
+                                 .SelectMany(x => x)
                                  .Timestamp()
                                  .Select(x => $"[{x.Timestamp.ToString("s")}] {x.Value}")
-                                 .Catch<string, Exception>(x => Observable.Return($"error: {x.Message}"))
                                  .Subscribe(reactivePropertyObserverBridgeStringAdd);
+        }
+
+        private IObservable<string> Anazyle(string x)
+        {
+            return new SolutionReferenseAnalyzer(new NewThreadScheduler(), x).Subscribe()
+                                                                             .Finally(() => UiSwitch.Value = true)
+                                                                             .Catch<string, Exception>(y => Observable.Return($"error: {y.Message}"));
         }
 
         private string SelectSolutionToInspect()
