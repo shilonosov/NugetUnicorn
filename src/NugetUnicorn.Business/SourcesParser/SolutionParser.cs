@@ -14,7 +14,12 @@ namespace NugetUnicorn.Business.SourcesParser
             var solutionFile = SolutionFile.Parse(solutionFilePath);
             return solutionFile.ProjectsInOrder
                                .Where(x => x.ProjectType == SolutionProjectType.KnownToBeMSBuildFormat || x.ProjectType == SolutionProjectType.WebProject)
-                               .Select(x => new Project(x.AbsolutePath));
+                               .Select(ComposeProject);
+        }
+
+        private static Project ComposeProject(ProjectInSolution x)
+        {
+            return new Project(x.AbsolutePath, null, null, ProjectCollection.GlobalProjectCollection, ProjectLoadSettings.IgnoreMissingImports);
         }
     }
 }
