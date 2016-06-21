@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectFileParserTests.cs" />
     <Compile Include="VersionSpecRangeBuilderTests.cs" />
     <Compile Include="VersionSpecExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,6 +97,11 @@
       <Project>{79721f58-a1bd-4b03-8958-2560eb16d1ad}</Project>
       <Name>NugetUnicorn.Business</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestSamples\SampleProject.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
