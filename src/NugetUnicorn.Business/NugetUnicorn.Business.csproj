@@ -112,7 +112,17 @@
     <Compile Include="PackageInspector.cs" />
     <Compile Include="PackageKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\Parser\SaxParserObserver.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\Parser\ContentHolder.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\Parser\SaxParser.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\CompositeSaxEvent.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\EndElementEvent.cs" />
     <Compile Include="SourcesParser\ProjectParser\ProjectFileParser.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\SaxEvent.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\StartElementEvent.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Sax\StringElementEvent.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\Reference.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\ProjectStructureItem.cs" />
     <Compile Include="SourcesParser\SolutionParser.cs" />
     <Compile Include="SourcesParser\SolutionReferenseAnalyzer.cs" />
     <Compile Include="Storage.cs" />
