@@ -87,6 +87,7 @@
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\EnumerableSwitch\IEnumerableSwitch.cs" />
     <Compile Include="Extensions\NugetExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\AppConfigFileReferenceMatcher.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\NugetPackageFileMatcher.cs" />
     <Compile Include="Extensions\XmlNodeExtensions.cs" />
