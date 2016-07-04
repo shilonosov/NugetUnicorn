@@ -1,69 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using NugetUnicorn.Business.Extensions.EnumerableSwitch;
 
 namespace NugetUnicorn.Business.Extensions
 {
-    public interface ISwitch<T>
+    public interface ICanEvaluate<out TV>
     {
-        ISwitch<T> Case(Func<T, bool> caseFunc, Action<T> action);
+        TV Evaluate();
+    }
 
-        void Default(Action<T> defaultAction);
+    public interface ISwitch<out T, TV> : ICanEvaluate<TV>
+    {
+        ISwitch<T, TV> Case(Func<T, bool> caseFunc, Func<T, TV> action);
 
-        void Evaluate(T t);
+        ICanEvaluate<TV> Default(Func<T, TV> defaultAction);
     }
 
     public static class ObjectExtensions
     {
-        public static ISwitch<T> Switch<T>(this T t, bool isExclusive)
+        public static ISwitch<T, TV> Switch<T, TV>(this T t)
         {
-            return new Switch<T>(isExclusive);
+            return new Switch<T, TV>(t);
         }
     }
 
-    public class Switch<T> : ISwitch<T>
+    public class Switch<T, TV> : ISwitch<T, TV>
     {
-        private readonly bool _breakOnFirstMatch;
+        private readonly T _subject;
 
-        private readonly IList<Tuple<Func<T, bool>, Action<T>>> _cases;
+        private readonly IList<Tuple<Func<T, bool>, Func<T, TV>>> _cases;
 
-        public Switch(bool breakOnFirstMatch)
+        public Switch(T subject)
         {
-            _breakOnFirstMatch = breakOnFirstMatch;
-            _cases = new List<Tuple<Func<T, bool>, Action<T>>>();
+            _subject = subject;
+            _cases = new List<Tuple<Func<T, bool>, Func<T, TV>>>();
         }
 
-        public ISwitch<T> Case(Func<T, bool> caseFunc, Action<T> action)
+        public ISwitch<T, TV> Case(Func<T, bool> caseFunc, Func<T, TV> action)
         {
-            _cases.Add(new Tuple<Func<T, bool>, Action<T>>(caseFunc, action));
+            _cases.Add(new Tuple<Func<T, bool>, Func<T, TV>>(caseFunc, action));
             return this;
         }
 
-        public void Default(Action<T> defaultAction)
+        public ICanEvaluate<TV> Default(Func<T, TV> defaultFunc)
         {
-            _cases.Add(new Tuple<Func<T, bool>, Action<T>>(x => true, defaultAction));
+            _cases.Add(new Tuple<Func<T, bool>, Func<T, TV>>(x => true, defaultFunc));
+            return this;
         }
 
-        public void Evaluate(T t)
+        public TV Evaluate()
         {
-            foreach (var thisCase in _cases)
+            var result = _cases.FirstOrDefault(x => x.Item1(_subject));
+            if (Equals(result, default(Tuple<Func<T, bool>, Func<T, TV>>)))
             {
-                var condition = thisCase.Item1;
-                if (!condition(t))
-                {
-                    continue;
-                }
-
-                thisCase.Item2(t);
-                if (_breakOnFirstMatch)
-                {
-                    break;
-                }
+                return default(TV);
             }
+            return result.Item2(_subject);
         }
     }
 }

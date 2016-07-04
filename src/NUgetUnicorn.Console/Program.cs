@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Build.Evaluation;
@@ -11,6 +12,7 @@ using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers;
 using NugetUnicorn.Business.Microsoft.Build;
 using NugetUnicorn.Business.SourcesParser;
+using NugetUnicorn.Business.SourcesParser.ProjectParser;
 
 namespace NUgetUnicorn.Console
 {
@@ -21,6 +23,10 @@ namespace NUgetUnicorn.Console
             //[DS] absolute path required
             var projects = SolutionParser.GetProjects(@"D:\dev\Projects\NugetUnicorn\src\NugetUnicorn.sln")
                                          .ToList();
+
+            Expiriment1(projects);
+
+
             var referenceMatcher = new ProbabilityMatchEngine<ProjectItem>();
             referenceMatcher.With(new ReferenceMatcher.NugetReference())
                             .With(new ReferenceMatcher.SystemReference())
@@ -52,6 +58,13 @@ namespace NUgetUnicorn.Console
                     .Do(x => { System.Console.WriteLine($"{x.FullPath}"); });
 
             System.Console.ReadLine();
+        }
+
+        private static void Expiriment1(IList<Project> projects)
+        {
+            var sut = new ProjectFileParser();
+
+            projects.ForEachItem(x => sut.Parse(x.FullPath));
         }
     }
 }

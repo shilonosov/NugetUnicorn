@@ -24,12 +24,9 @@ namespace NugetUnicorn.Tests.Business
         {
             var sut = new ProjectFileParser();
 
-            var parsedReferences = sut.Parse(_fullPath)
-                                      .OfType<ReferenceBase>()
-                                      .ToList()
-                                      .Wait();
+            var parsedReferences = sut.Parse(_fullPath);
 
-            Assert.AreEqual(32, parsedReferences.Count);
+            Assert.AreEqual(32, parsedReferences.References.Count);
         }
 
         [Test]
@@ -37,12 +34,10 @@ namespace NugetUnicorn.Tests.Business
         {
             var sut = new ProjectFileParser();
 
-            var parsedReferences = sut.Parse(_fullPath)
-                                      .OfType<Reference>()
-                                      .ToList()
-                                      .Wait();
+            var parsedReferences = sut.Parse(_fullPath);
 
-            var first = parsedReferences.First();
+            var first = parsedReferences.References.First() as Reference;
+            Assert.NotNull(first);
             Assert.AreEqual(@"..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.Controls.dll", first.HintPath);
         }
 
@@ -51,13 +46,13 @@ namespace NugetUnicorn.Tests.Business
         {
             var sut = new ProjectFileParser();
 
-            var parsedReferences = sut.Parse(_fullPath)
-                                      .OfType<ProjectReference>()
-                                      .ToList()
-                                      .Wait();
+            var parsedReferences = sut.Parse(_fullPath);
 
-            var first = parsedReferences.First();
-            Assert.AreEqual(1, parsedReferences.Count);
+            var references = parsedReferences.References;
+            var first = references.First() as ProjectReference;
+
+            Assert.NotNull(first);
+            Assert.AreEqual(1, references.Count);
             Assert.AreEqual(@"..\NugetUnicorn.Business\NugetUnicorn.Business.csproj", first.Include);
             Assert.AreEqual(@"NugetUnicorn.Business", first.Name);
             Assert.AreEqual(@"{79721f58-a1bd-4b03-8958-2560eb16d1ad}", first.Guid);

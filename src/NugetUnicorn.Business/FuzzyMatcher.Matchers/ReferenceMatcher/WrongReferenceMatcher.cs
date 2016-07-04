@@ -7,6 +7,7 @@ using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.Microsoft.Build;
+using NugetUnicorn.Business.SourcesParser.ProjectParser;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {

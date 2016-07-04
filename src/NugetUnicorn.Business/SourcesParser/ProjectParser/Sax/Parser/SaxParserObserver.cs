@@ -23,45 +23,56 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
             var start = value as StartElementEvent;
             if (start != null)
             {
-                if (start.IsClosed)
-                {
-                    Debug.WriteLine($"><{start.Name}");
-                    _observer.OnNext(ProjectStructureItem.Build(start, new List<SaxEvent>()));
-                    return;
-                }
-
-                Debug.WriteLine($"->{start.Name}");
-                _stack.Push(value);
+                HandleProjectReferenceFromEmpty(value, start);
                 return;
             }
 
             var end = value as EndElementEvent;
-            if (end != null)
+            if (end != null && end.IsClosed)
             {
-                var elementName = end.Name;
+                HandleProjectReferenceFromClosedEnd(end);
+                return;
+            }
+            else if (end != null)
+            { 
+                HandleProjectReferenceFromEnd(end);
+                return;
+            }
 
-                if (end.IsClosed)
-                {
-                    Debug.WriteLine($"<-{elementName}");
-                    _observer.OnNext(ProjectStructureItem.Build(end));
-                    return;
-                }
+            //var outputType = value as 
 
-                var content = end.Descendants;
-                var startCandidate = _stack.Peek() as StartElementEvent;
-                if (startCandidate != null)
+
+        }
+
+        private void HandleProjectReferenceFromEnd(EndElementEvent end)
+        {
+            var elementName = end.Name;
+            var content = end.Descendants;
+            var startCandidate = _stack.Peek() as StartElementEvent;
+            if (startCandidate != null)
+            {
+                if (!string.Equals(startCandidate.Name, elementName))
                 {
-                    if (string.Equals(startCandidate.Name, elementName))
-                    {
-                        Debug.WriteLine($"<-{elementName}");
-                        _stack.Pop();
-                        _observer.OnNext(ProjectStructureItem.Build(startCandidate, content));
-                        return;
-                    }
                     _observer.OnError(new ApplicationException($"unexpected closing tag. expected: {startCandidate.Name} actual: {elementName}"));
                 }
-                _observer.OnError(new ApplicationException($"unexpected end element: {elementName}"));
+                else
+                {
+                    _stack.Pop();
+                    _observer.OnNext(ProjectStructureItem.Build(startCandidate, content));
+                    return;
+                }
             }
+            _observer.OnError(new ApplicationException($"unexpected end element: {elementName}"));
+        }
+
+        private void HandleProjectReferenceFromClosedEnd(EndElementEvent end)
+        {
+            _observer.OnNext(ProjectStructureItem.Build(end));
+        }
+
+        private void HandleProjectReferenceFromEmpty(SaxEvent value, StartElementEvent start)
+        {
+            _stack.Push(value);
         }
 
         public void OnError(Exception error)
