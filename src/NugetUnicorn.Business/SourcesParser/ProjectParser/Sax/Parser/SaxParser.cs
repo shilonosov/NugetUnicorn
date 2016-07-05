@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Xml;
@@ -45,20 +46,21 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
         private void ProcessNode(IObserver<SaxEvent> x, XmlTextReader reader)
         {
             reader.NodeType
-                  .Switch(true)
+                  .Switch<XmlNodeType, Unit>()
                   .Case(y => y == XmlNodeType.Element && reader.IsEmptyElement, y => HandleEndElement(reader, x))
                   .Case(y => y == XmlNodeType.Element, y => HandleStartElement(reader, x))
                   .Case(y => y == XmlNodeType.EndElement, y => HandleEndElement(reader, x))
                   .Case(y => y == XmlNodeType.Text, y => HandleTextElement(reader))
-                  .Evaluate(reader.NodeType);
+                  .Evaluate();
         }
 
-        private void HandleTextElement(XmlTextReader reader)
+        private Unit HandleTextElement(XmlTextReader reader)
         {
             _contentHolder.Append(new StringElementEvent(reader.Value));
+            return Unit.Default;
         }
 
-        private void HandleEndElement(XmlTextReader reader, IObserver<SaxEvent> observer)
+        private Unit HandleEndElement(XmlTextReader reader, IObserver<SaxEvent> observer)
         {
             var content = _contentHolder.GetContent();
             var isClosed = reader.IsEmptyElement;
@@ -89,9 +91,11 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
             _contentHolder.Append(endElementEvent);
 
             observer.OnNext(endElementEvent);
+
+            return Unit.Default;
         }
 
-        private void HandleStartElement(XmlTextReader reader, IObserver<SaxEvent> observer)
+        private Unit HandleStartElement(XmlTextReader reader, IObserver<SaxEvent> observer)
         {
             _contentHolder = new ContentHolder(_contentHolder);
 
@@ -108,6 +112,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
                 }
             }
             observer.OnNext(new StartElementEvent(strUri, strName, isClosed, new ReadOnlyDictionary<string, string>(attributes)));
+
+            return Unit.Default;
         }
     }
 }

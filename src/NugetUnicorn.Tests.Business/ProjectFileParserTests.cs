@@ -36,7 +36,7 @@ namespace NugetUnicorn.Tests.Business
 
             var parsedReferences = sut.Parse(_fullPath);
 
-            var first = parsedReferences.References.First() as Reference;
+            var first = parsedReferences.References.OfType<Reference>().First();
             Assert.NotNull(first);
             Assert.AreEqual(@"..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.Controls.dll", first.HintPath);
         }
@@ -49,13 +49,25 @@ namespace NugetUnicorn.Tests.Business
             var parsedReferences = sut.Parse(_fullPath);
 
             var references = parsedReferences.References;
-            var first = references.First() as ProjectReference;
+            var projectReferences = references.OfType<ProjectReference>()
+                                              .ToArray();
+            var first = projectReferences.First();
 
             Assert.NotNull(first);
-            Assert.AreEqual(1, references.Count);
+            Assert.AreEqual(1, projectReferences.Length);
             Assert.AreEqual(@"..\NugetUnicorn.Business\NugetUnicorn.Business.csproj", first.Include);
             Assert.AreEqual(@"NugetUnicorn.Business", first.Name);
             Assert.AreEqual(@"{79721f58-a1bd-4b03-8958-2560eb16d1ad}", first.Guid);
+        }
+
+        [Test]
+        public void TestProjectTargetName()
+        {
+            var sut = new ProjectFileParser();
+
+            var parsedReferences = sut.Parse(_fullPath);
+
+            Assert.AreEqual("NugetUnicorn.Ui.exe", parsedReferences.TargetName);
         }
     }
 }

@@ -121,8 +121,12 @@
     <Compile Include="SourcesParser\ProjectParser\Sax\SaxEvent.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\StartElementEvent.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\StringElementEvent.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\AssemblyName.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\OutputType.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\ProjectReference.cs" />
     <Compile Include="SourcesParser\ProjectParser\Structure\Reference.cs" />
     <Compile Include="SourcesParser\ProjectParser\Structure\ProjectStructureItem.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\ReferenceBase.cs" />
     <Compile Include="SourcesParser\SolutionParser.cs" />
     <Compile Include="SourcesParser\SolutionReferenseAnalyzer.cs" />
     <Compile Include="Storage.cs" />

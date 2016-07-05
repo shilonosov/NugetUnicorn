@@ -17,18 +17,24 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
     {
         public IReadOnlyCollection<ReferenceBase> References { get; private set; }
 
+        public string TargetName { get; private set; }
+
         public ProjectPoco(IEnumerable<ProjectStructureItem> projectStructure)
         {
             var references = new List<ReferenceBase>();
 
-            string projectOutputName = null; // here goes project assembly name + output type
+            var projectOutputName = string.Empty;
+            var projectOutputType = string.Empty;
 
             projectStructure.Switch()
                 .Case(x => x is ReferenceBase, x => references.Add(x as ReferenceBase))
+                .Case(x => x is AssemblyName, x => projectOutputName = (x as AssemblyName).Name)
+                .Case(x => x is OutputType, x => projectOutputType = (x as OutputType).Extension)
                 .Default(x => { })
                 .Do(x => { });
 
             References = references.AsReadOnly();
+            TargetName = $"{projectOutputName}.{projectOutputType}";
         }
     }
 

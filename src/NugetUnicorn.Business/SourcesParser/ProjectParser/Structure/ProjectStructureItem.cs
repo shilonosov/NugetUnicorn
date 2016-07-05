@@ -60,11 +60,11 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
         private static ProjectStructureItem HandleReference(CompositeSaxEvent saxEvent, EndElementEvent[] endElementEvents)
         {
             var include = saxEvent.Attributes["Include"];
-            var hintPath = endElementEvents.Single(x => string.Equals(x.Name, "HintPath"))
-                                           .Descendants
-                                           .OfType<StringElementEvent>()
-                                           .Single()
-                                           .Content;
+            var hintPath = endElementEvents?.SingleOrDefault(x => string.Equals(x.Name, "HintPath"))
+                                           ?.Descendants
+                                           ?.OfType<StringElementEvent>()
+                                           .SingleOrDefault()
+                                           ?.Content;
             return new Reference(include, hintPath);
         }
 
