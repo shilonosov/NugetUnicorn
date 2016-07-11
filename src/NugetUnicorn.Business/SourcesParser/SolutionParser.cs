@@ -20,20 +20,19 @@ namespace NugetUnicorn.Business.SourcesParser
             ProjectFileParser = new ProjectFileParser();
         }
 
-        //public static IEnumerable<IObservable<ProjectStructureItem>> GetProjects(string solutionFilePath)
-        public static IEnumerable<Project> GetProjects(string solutionFilePath)
+        public static IEnumerable<ProjectPoco> GetProjects(string solutionFilePath)
+        //public static IEnumerable<Project> GetProjects(string solutionFilePath)
         {
             var solutionFile = SolutionFile.Parse(solutionFilePath);
             return solutionFile.ProjectsInOrder
                                .Where(x => x.ProjectType == SolutionProjectType.KnownToBeMSBuildFormat || x.ProjectType == SolutionProjectType.WebProject)
-                //.Select(ComposeProjectStructureObservable);
-                               .Select(ComposeProject);
+                               .Select(ComposeProjectPoco);
         }
 
-        //private static IObservable<ProjectStructureItem> ComposeProjectStructureObservable(ProjectInSolution x)
-        //{
-        //    return ProjectFileParser.Parse(x.AbsolutePath);
-        //}
+        private static ProjectPoco ComposeProjectPoco(ProjectInSolution x)
+        {
+            return ProjectFileParser.Parse(x.AbsolutePath);
+        }
 
         private static Project ComposeProject(ProjectInSolution x)
         {

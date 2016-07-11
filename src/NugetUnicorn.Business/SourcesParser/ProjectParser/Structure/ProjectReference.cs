@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
 {
     public class ProjectReference : ReferenceBase

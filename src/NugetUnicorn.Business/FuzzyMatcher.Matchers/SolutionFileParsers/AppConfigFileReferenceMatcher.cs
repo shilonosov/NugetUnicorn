@@ -57,6 +57,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
             return new AppConfigFilePropabilityMetadata(dataSample, this, 1d, fullPath);
         }
 
+        // TODO: review, refactor
         public class AppConfigFilePropabilityMetadata : SomeProbabilityMatchMetadata<ProjectItem>
         {
             public class BindingRedirectModel

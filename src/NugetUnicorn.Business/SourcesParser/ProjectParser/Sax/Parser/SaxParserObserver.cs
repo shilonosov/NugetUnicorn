@@ -23,28 +23,24 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
             var start = value as StartElementEvent;
             if (start != null)
             {
-                HandleProjectReferenceFromEmpty(value, start);
+                HandleEmptyTag(value, start);
                 return;
             }
 
             var end = value as EndElementEvent;
             if (end != null && end.IsClosed)
             {
-                HandleProjectReferenceFromClosedEnd(end);
+                HandleClosedTag(end);
                 return;
             }
             else if (end != null)
             { 
-                HandleProjectReferenceFromEnd(end);
+                HandleCloseTag(end);
                 return;
             }
-
-            //var outputType = value as 
-
-
         }
 
-        private void HandleProjectReferenceFromEnd(EndElementEvent end)
+        private void HandleCloseTag(EndElementEvent end)
         {
             var elementName = end.Name;
             var content = end.Descendants;
@@ -58,6 +54,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
                 else
                 {
                     _stack.Pop();
+                    //TODO: check if end and start are interchangable here
                     _observer.OnNext(ProjectStructureItem.Build(startCandidate, content));
                     return;
                 }
@@ -65,12 +62,12 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
             _observer.OnError(new ApplicationException($"unexpected end element: {elementName}"));
         }
 
-        private void HandleProjectReferenceFromClosedEnd(EndElementEvent end)
+        private void HandleClosedTag(EndElementEvent end)
         {
             _observer.OnNext(ProjectStructureItem.Build(end));
         }
 
-        private void HandleProjectReferenceFromEmpty(SaxEvent value, StartElementEvent start)
+        private void HandleEmptyTag(SaxEvent value, StartElementEvent start)
         {
             _stack.Push(value);
         }

@@ -10,5 +10,10 @@ namespace NugetUnicorn.Business.Extensions
         {
             return dictionary.ToDictionary(x => x.Key, x => transformationSelector(x.Value));
         }
+
+        public static IDictionary<TKey, TNewValue> Transform<TKey, TValue, TNewValue>(this IDictionary<TKey, TValue> dictionary, Func<TKey, TValue, TNewValue> transformationSelector)
+        {
+            return dictionary.ToDictionary(x => x.Key, x => transformationSelector(x.Key, x.Value));
+        }
     }
 }

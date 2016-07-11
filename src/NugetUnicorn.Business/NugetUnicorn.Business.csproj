@@ -88,6 +88,16 @@
     <Compile Include="Extensions\EnumerableSwitch\IEnumerableSwitch.cs" />
     <Compile Include="Extensions\NugetExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\Analyzer\WrongReferencePropabilityMetadata.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\DllReference.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\Metadata\ExistingReferenceMetadataBase.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\Metadata\ProjectMetadata.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\Metadata\NugetMetadata.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\NugetReference.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\ProjectReference.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceInformation.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\ReferenceMetadataBase.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\SystemReference.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\AppConfigFileReferenceMatcher.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\NugetPackageFileMatcher.cs" />
     <Compile Include="Extensions\XmlNodeExtensions.cs" />
@@ -98,8 +108,8 @@
     <Compile Include="FuzzyMatcher\Engine\ProbabilityMatchEngine.cs" />
     <Compile Include="FuzzyMatcher\Engine\ProbabilityMatchMetadata.cs" />
     <Compile Include="FuzzyMatcher\Engine\SomeProbabilityMatchMetadata.cs" />
-    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceMatcher.cs" />
-    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\WrongReferenceMatcher.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\Metadata\DllMetadata.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\Analyzer\WrongReferenceMatcher.cs" />
     <Compile Include="INugetLibraryProxy.cs" />
     <Compile Include="IStorage.cs" />
     <Compile Include="Microsoft\Build\ProjectInstanceExtensions.cs" />
@@ -112,6 +122,8 @@
     <Compile Include="PackageInspector.cs" />
     <Compile Include="PackageKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\FilePath.cs" />
+    <Compile Include="SourcesParser\ProjectParser\ProjectPoco.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\Parser\SaxParserObserver.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\Parser\ContentHolder.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\Parser\SaxParser.cs" />
@@ -121,6 +133,7 @@
     <Compile Include="SourcesParser\ProjectParser\Sax\SaxEvent.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\StartElementEvent.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\StringElementEvent.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Structure\AppConfigItem.cs" />
     <Compile Include="SourcesParser\ProjectParser\Structure\AssemblyName.cs" />
     <Compile Include="SourcesParser\ProjectParser\Structure\OutputType.cs" />
     <Compile Include="SourcesParser\ProjectParser\Structure\ProjectReference.cs" />

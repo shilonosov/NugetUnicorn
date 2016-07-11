@@ -8,11 +8,17 @@ using Microsoft.Build.Execution;
 using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers;
+using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
+using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
+using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers;
 using NugetUnicorn.Business.Microsoft.Build;
 using NugetUnicorn.Business.SourcesParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
+using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+
+using ProjectReference = NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType.ProjectReference;
 
 namespace NUgetUnicorn.Console
 {
@@ -24,47 +30,37 @@ namespace NUgetUnicorn.Console
             var projects = SolutionParser.GetProjects(@"D:\dev\Projects\NugetUnicorn\src\NugetUnicorn.sln")
                                          .ToList();
 
-            Expiriment1(projects);
 
+            var referenceMatcher = new ProbabilityMatchEngine<ReferenceBase>();
+            referenceMatcher.With(new NugetReference())
+                            .With(new SystemReference())
+                            .With(new DllReference())
+                            .With(new ProjectReference());
 
-            var referenceMatcher = new ProbabilityMatchEngine<ProjectItem>();
-            referenceMatcher.With(new ReferenceMatcher.NugetReference())
-                            .With(new ReferenceMatcher.SystemReference())
-                            .With(new ReferenceMatcher.ExplicitReference())
-                            .With(new ReferenceMatcher.DllReference())
-                            .With(new ReferenceMatcher.ProjectReference());
-
-            var wrongReferenceMatcher = new ProbabilityMatchEngine<ReferenceMatcher.DllReference.DllMetadata>();
+            var wrongReferenceMatcher = new ProbabilityMatchEngine<DllMetadata>();
             wrongReferenceMatcher.With(new WrongReferenceMatcher(projects));
 
             projects.Select(
                 x =>
                     {
-                        var name = x.GetProjectName() ?? "NO PROJECT NAME";
+                        var name = x.Name ?? "NO PROJECT NAME";
                         ConsoleEx.WriteLine(ConsoleColor.Green, $"PROJECT: {name}");
-                        return x.Items;
+                        return x;
                     })
-                    .SelectMany(x => x)
-                    .FindBestMatch<ProjectItem, ReferenceMatcher.DllReference.DllMetadata>(referenceMatcher, 0d)
-                    .FindBestMatch<ReferenceMatcher.DllReference.DllMetadata, WrongReferenceMatcher.WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d)
+                    .SelectMany(x => x.References)
+                    .FindBestMatch<ReferenceBase, DllMetadata>(referenceMatcher, 0d)
+                    .FindBestMatch<DllMetadata, WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d)
                     .Do(
-                        x => { ConsoleEx.WriteLine(ConsoleColor.Red, $"{x.Probability} -- {x.Project.GetProjectName()} to {x.Reference} ({x.SuspectedProject.GetProjectName()})"); });
+                        x => { ConsoleEx.WriteLine(ConsoleColor.Red, $"{x.Probability} -- to {x.Reference} ({x.SuspectedProject.Name})"); });
 
-            var nugetPackageFileParser = new ProbabilityMatchEngine<ProjectItem>();
-            nugetPackageFileParser.With(new NugetPackageFileMatcher());
+            //var nugetPackageFileParser = new ProbabilityMatchEngine<ReferenceBase>();
+            //nugetPackageFileParser.With(new NugetPackageFileMatcher());
 
-            projects.SelectMany(x => x.Items)
-                    .FindBestMatch<ProjectItem, NugetPackageFileMatcher.NugetPackageFilePropabilityMetadata>(nugetPackageFileParser, 0d)
-                    .Do(x => { System.Console.WriteLine($"{x.FullPath}"); });
+            //projects.SelectMany(x => x.References)
+            //        .FindBestMatch<ReferenceBase, NugetPackageFileMatcher.NugetPackageFilePropabilityMetadata>(nugetPackageFileParser, 0d)
+            //        .Do(x => { System.Console.WriteLine($"{x.FullPath}"); });
 
             System.Console.ReadLine();
-        }
-
-        private static void Expiriment1(IList<Project> projects)
-        {
-            var sut = new ProjectFileParser();
-
-            projects.ForEachItem(x => sut.Parse(x.FullPath));
         }
     }
 }
