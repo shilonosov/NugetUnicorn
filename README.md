@@ -14,7 +14,7 @@ It`s MIT license (is that enough?).
 # Wonderful libraries used in this project
 
 * [Command Line Parser Library](https://github.com/gsscoder/commandline)
-* [GraphX](https://github.com/panthernet/GraphX/tree/master) (I know, its now supported)
+* [GraphX](https://github.com/panthernet/GraphX/tree/master) (I know, its not supported)
 * [Json.Net](https://github.com/JamesNK/Newtonsoft.Json)
 * [Nuget.Core](https://github.com/NuGet/NuGet2)
 * [NUnit](http://nunit.org/)
