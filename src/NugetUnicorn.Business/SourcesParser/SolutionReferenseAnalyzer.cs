@@ -37,9 +37,9 @@ namespace NugetUnicorn.Business.SourcesParser
             _solutionPath = solutionPath;
         }
 
-        public IObservable<string> Subscribe()
+        public IObservable<Message.Info> Run()
         {
-            return Observable.Create<string>(
+            return Observable.Create<Message.Info>(
                 x =>
                     {
                         return _scheduler.ScheduleAsync(
@@ -47,23 +47,23 @@ namespace NugetUnicorn.Business.SourcesParser
                     });
         }
 
-        private static Task AnalyzeSolution(string solutionPath, IObserver<string> observer, CancellationToken disposable)
+        private static Task AnalyzeSolution(string solutionPath, IObserver<Message.Info> observer, CancellationToken disposable)
         {
             return Task.Run(() => AnalyzeInternal(solutionPath, observer), disposable);
         }
 
-        private static void AnalyzeInternal(string solutionPath, IObserver<string> observer)
+        private static void AnalyzeInternal(string solutionPath, IObserver<Message.Info> observer)
         {
             try
             {
-                observer.OnNext("--==--");
+                observer.OnNextInfo("--==--");
 
-                observer.OnNext($"starting the {solutionPath} analysis...");
-                observer.OnNext("parsing the solution...");
+                observer.OnNextInfo($"starting the {solutionPath} analysis...");
+                observer.OnNextInfo("parsing the solution...");
                 var projects = SolutionParser.GetProjects(solutionPath)
                     .ToList();
 
-                observer.OnNext("parsed.");
+                observer.OnNextInfo("parsed.");
 
                 var referenceMatcher = new ProbabilityMatchEngine<ReferenceBase>();
                 referenceMatcher.With(new NugetReference())
@@ -85,14 +85,13 @@ namespace NugetUnicorn.Business.SourcesParser
                 var errorReport = projectReferenceVsDirectDllReference.Merge(incorrectReferences);
                 foreach (var item in errorReport)
                 {
-                    observer.OnNext($"project: {item.Key} report:");
+                    observer.OnNextInfo($"project: {item.Key} report:");
                     item.Value
-                        .DoIfEmpty(() => observer.OnNext("all seems to be ok"))
-                        .Do(x => observer.OnNext($"possible issue: {x}"));
+                        .DoIfEmpty(() => observer.OnNextInfo("all seems to be ok"))
+                        .Do(x => observer.OnNextError($"possible issue: {x}"));
                 }
 
-                observer.OnNext("analysis completed.");
-                observer.OnNext("");
+                observer.OnNextInfo("analysis completed.");
                 observer.OnCompleted();
             }
             catch (Exception e)

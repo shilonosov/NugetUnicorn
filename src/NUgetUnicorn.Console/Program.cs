@@ -1,66 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Text;
 
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
+using CommandLine;
+using CommandLine.Text;
 
-using NugetUnicorn.Business.Extensions;
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
-using NugetUnicorn.Business.FuzzyMatcher.Matchers;
-using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
-using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
-using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
-using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
-using NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers;
-using NugetUnicorn.Business.Microsoft.Build;
 using NugetUnicorn.Business.SourcesParser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
-
-using ProjectReference = NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType.ProjectReference;
 
 namespace NUgetUnicorn.Console
 {
-    class Program
+    internal class Options
     {
-        static void Main(string[] args)
+        [Option('l', "log-level", DefaultValue = "Error", HelpText = "this is a log level")]
+        public string LogLevelString { get; set; }
+
+        [Option('s', "solution-path", DefaultValue = "", HelpText = "this is a solution full path", Required = true)]
+        public string SolutionPath { get; set; }
+
+        [HelpOption]
+        public string GetUsage()
         {
-            //[DS] absolute path required
-            var projects = SolutionParser.GetProjects(@"D:\dev\Projects\NugetUnicorn\src\NugetUnicorn.sln")
-                                         .ToList();
+            var usage = new StringBuilder();
+            usage.AppendLine("NugetUnicorn 1.0");
+            usage.AppendLine("You can always read the code (hehehe) on a github: https://github.com/shilonosov/NugetUnicorn");
+            usage.Append(HelpText.AutoBuild(this));
+            return usage.ToString();
+        }
+    }
 
+    internal class Program
+    {
+        public static int Main(string[] args)
+        {
+            var options = new Options();
+            if (Parser.Default.ParseArguments(args, options))
+            {
+                return RunAnalyzer(options);
+            }
+            return -1;
+        }
 
-            var referenceMatcher = new ProbabilityMatchEngine<ReferenceBase>();
-            referenceMatcher.With(new NugetReference())
-                            .With(new SystemReference())
-                            .With(new DllReference())
-                            .With(new ProjectReference());
+        private static int RunAnalyzer(Options options)
+        {
+            var filterType = Message.TypeFromName(options.LogLevelString);
+            var commonPart = new SolutionReferenseAnalyzer(Scheduler.CurrentThread, options.SolutionPath).Run()
+                                                                                                         .Catch<Message.Info, Exception>(
+                                                                                                             y => Observable.Return(new Message.Fatal($"error: {y.Message}")))
+                                                                                                             .Timestamp()
+                                                                                                         .ToEnumerable()
+                                                                                                         .ToArray();
+            var itemsToPrint = commonPart.Where(x =>
+                {
+                    var itemType = x.Value.GetType();
+                    return itemType.IsSubclassOf(filterType) || itemType == filterType;
+                });
 
-            var wrongReferenceMatcher = new ProbabilityMatchEngine<DllMetadata>();
-            wrongReferenceMatcher.With(new WrongReferenceMatcher(projects));
+            foreach (var outputItem in itemsToPrint)
+            {
+                System.Console.WriteLine($"{outputItem.Timestamp} {outputItem.Value}");
+            }
 
-            projects.Select(
-                x =>
-                    {
-                        var name = x.Name ?? "NO PROJECT NAME";
-                        ConsoleEx.WriteLine(ConsoleColor.Green, $"PROJECT: {name}");
-                        return x;
-                    })
-                    .SelectMany(x => x.References)
-                    .FindBestMatch<ReferenceBase, DllMetadata>(referenceMatcher, 0d)
-                    .FindBestMatch<DllMetadata, WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d)
-                    .Do(
-                        x => { ConsoleEx.WriteLine(ConsoleColor.Red, $"{x.Probability} -- to {x.Reference} ({x.SuspectedProject.Name})"); });
-
-            //var nugetPackageFileParser = new ProbabilityMatchEngine<ReferenceBase>();
-            //nugetPackageFileParser.With(new NugetPackageFileMatcher());
-
-            //projects.SelectMany(x => x.References)
-            //        .FindBestMatch<ReferenceBase, NugetPackageFileMatcher.NugetPackageFilePropabilityMetadata>(nugetPackageFileParser, 0d)
-            //        .Do(x => { System.Console.WriteLine($"{x.FullPath}"); });
-
-            System.Console.ReadLine();
+            return commonPart.Count(x => x.Value.GetType().IsSubclassOf(typeof(Message.Warning)));
         }
     }
 }

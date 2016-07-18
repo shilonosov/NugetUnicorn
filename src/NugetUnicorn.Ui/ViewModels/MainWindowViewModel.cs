@@ -53,11 +53,11 @@ namespace NugetUnicorn.Ui.ViewModels
                                  .Subscribe(reactivePropertyObserverBridgeStringAdd);
         }
 
-        private IObservable<string> Anazyle(string x)
+        private IObservable<Message.Info> Anazyle(string x)
         {
-            return new SolutionReferenseAnalyzer(new NewThreadScheduler(), x).Subscribe()
+            return new SolutionReferenseAnalyzer(new NewThreadScheduler(), x).Run()
                                                                              .Finally(() => UiSwitch.Value = true)
-                                                                             .Catch<string, Exception>(y => Observable.Return($"error: {y.Message}"));
+                                                                             .Catch<Message.Info, Exception>(y => Observable.Return(new Message.Fatal($"error: {y.Message}")));
         }
 
         private string SelectSolutionToInspect()
