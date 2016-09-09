@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,12 +41,25 @@ namespace NugetUnicorn.Business.SourcesParser
 
         public IObservable<Message.Info> Run()
         {
+            var solutionPath = NormalizeSolutionPath();
             return Observable.Create<Message.Info>(
                 x =>
                     {
                         return _scheduler.ScheduleAsync(
-                            async (scheduler, cancellationToken) => await AnalyzeSolution(_solutionPath, x, cancellationToken));
+                            async (scheduler, cancellationToken) => await AnalyzeSolution(solutionPath, x, cancellationToken));
                     });
+        }
+
+        private string NormalizeSolutionPath()
+        {
+            var solutionPath = _solutionPath;
+            if (!Path.IsPathRooted(_solutionPath))
+            {
+                var location = Assembly.GetEntryAssembly().Location;
+                var directoryName = Path.GetDirectoryName(location);
+                solutionPath = Path.Combine(directoryName, solutionPath);
+            }
+            return solutionPath;
         }
 
         private static Task AnalyzeSolution(string solutionPath, IObserver<Message.Info> observer, CancellationToken disposable)
