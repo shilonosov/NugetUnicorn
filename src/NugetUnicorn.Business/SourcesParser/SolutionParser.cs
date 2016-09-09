@@ -31,7 +31,14 @@ namespace NugetUnicorn.Business.SourcesParser
 
         private static ProjectPoco ComposeProjectPoco(ProjectInSolution x)
         {
-            return ProjectFileParser.Parse(x.AbsolutePath);
+            try
+            {
+                return ProjectFileParser.Parse(x.AbsolutePath);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static Project ComposeProject(ProjectInSolution x)
