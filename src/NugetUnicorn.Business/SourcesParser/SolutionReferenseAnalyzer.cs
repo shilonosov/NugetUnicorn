@@ -88,12 +88,17 @@ namespace NugetUnicorn.Business.SourcesParser
                                                                       //.Merge(differentVersionsReferencesErrors);
                 foreach (var item in errorReport)
                 {
-                    observer.OnNextInfo($"project: {item.Key} report:");
                     try
                     {
-                        item.Value
-                            .DoIfEmpty(() => observer.OnNextInfo("all seems to be ok"))
-                            .Do(x => observer.OnNextError($"possible issue: {x}"));
+                        if (item.Value.Any())
+                        {
+                            var errorMessage = string.Join(Environment.NewLine, item.Value.Select(x => $"possible issue: {x}"));
+                            observer.OnNextError($"project: {item.Key} report:{Environment.NewLine}{errorMessage}");
+                        }
+                        else
+                        {
+                            observer.OnNextInfo("all seems to be ok");
+                        }
                     }
                     catch (Exception e)
                     {
