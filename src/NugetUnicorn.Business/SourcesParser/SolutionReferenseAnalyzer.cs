@@ -32,31 +32,18 @@ namespace NugetUnicorn.Business.SourcesParser
         public SolutionReferenseAnalyzer(IScheduler scheduler, string solutionPath)
         {
             _scheduler = scheduler;
-            _solutionPath = solutionPath;
+            _solutionPath = Path.GetFullPath(solutionPath);
         }
 
         public IObservable<Message.Info> Run()
         {
-            var solutionPath = NormalizeSolutionPath();
             return Observable.Create<Message.Info>(
                 x =>
                 {
                     return _scheduler.ScheduleAsync(
                         async (scheduler, cancellationToken) =>
-                                await AnalyzeSolution(solutionPath, x, cancellationToken));
+                                await AnalyzeSolution(_solutionPath, x, cancellationToken));
                 });
-        }
-
-        private string NormalizeSolutionPath()
-        {
-            var solutionPath = _solutionPath;
-            if (!Path.IsPathRooted(_solutionPath))
-            {
-                var location = Assembly.GetEntryAssembly().Location;
-                var directoryName = Path.GetDirectoryName(location);
-                solutionPath = Path.Combine(directoryName, solutionPath);
-            }
-            return solutionPath;
         }
 
         private static Task AnalyzeSolution(string solutionPath, IObserver<Message.Info> observer,
