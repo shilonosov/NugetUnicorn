@@ -17,6 +17,8 @@ using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+
+using ProjectMetadata = NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata.ProjectMetadata;
 using ProjectReference = NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType.ProjectReference;
 
 namespace NugetUnicorn.Business.SourcesParser
@@ -89,11 +91,14 @@ namespace NugetUnicorn.Business.SourcesParser
                     x => x,
                     x => x.References.FindBestMatch<ReferenceBase, ReferenceMetadataBase>(referenceMatcher, 0d));
 
-                var projectReferenceVsDirectDllReference = ComposeProjectReferenceErrors(referenceMetadatas,
-                    wrongReferenceMatcher);
-                var incorrectReferences = ComposeBindingsErrors(projects, referenceMetadatas, observer);
+                var projectReferenceVsDirectDllReference = ComposeProjectReferenceErrors(referenceMetadatas, wrongReferenceMatcher);
+                var referencesByProjects = ComposeReferencesByProjects(observer, referenceMetadatas);
+
+                var incorrectReferences = ComposeBindingsErrors(projects, referencesByProjects);
+                //var differentVersionsReferencesErrors = ComposeDifferentVersionsReferencesErrors(referencesByProjects);
 
                 var errorReport = projectReferenceVsDirectDllReference.Merge(incorrectReferences);
+                                                                      //.Merge(differentVersionsReferencesErrors);
                 foreach (var item in errorReport)
                 {
                     observer.OnNextInfo($"project: {item.Key} report:");
@@ -120,6 +125,18 @@ namespace NugetUnicorn.Business.SourcesParser
             }
         }
 
+        private static IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> ComposeReferencesByProjects(IObserver<Message.Info> observer, Dictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>> referenceMetadatas)
+        {
+            return referenceMetadatas.Transform(x => x.OfType<ExistingReferenceMetadataBase>())
+                                     .Transform((x, y) => y.Select(z => ComposeReferenceInformation(z, x, observer)).Where(z => z != null));
+        }
+
+        //private static IDictionary<ProjectPoco, IEnumerable<string>> ComposeDifferentVersionsReferencesErrors(IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referenceMetadatas)
+        //{
+        //    var allReferences = referenceMetadatas.SelectMany(x => x.Value.Select(y => new KeyValuePair<ProjectPoco, ReferenceInformation>(x.Key, y)));
+        //    allReferences.GroupBy(x => x.Value.AssemblyName).Select(x => x.GroupBy(y => y.Value.Version).Where(y => y.Count() > 1)).
+        //}
+
         private static IDictionary<ProjectPoco, IEnumerable<string>> ComposeProjectReferenceErrors(
             IDictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>> referenceMetadatas,
             IProbabilityMatchEngine<DllMetadata> wrongReferenceMatcher)
@@ -140,12 +157,8 @@ namespace NugetUnicorn.Business.SourcesParser
         }
 
         private static IEnumerable<KeyValuePair<ProjectPoco, IEnumerable<string>>> ComposeBindingsErrors(
-            IList<ProjectPoco> projects, IDictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>> referenceMetadatas,
-            IObserver<Message.Info> observer)
+            IList<ProjectPoco> projects, IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referencesByProjects)
         {
-            var referencesByProjects = referenceMetadatas.Transform(x => x.OfType<ExistingReferenceMetadataBase>())
-                .Transform((x, y) => y.Select(z => ComposeReferenceInformation(z, x, observer)).Where(z => z != null));
-
             var appConfigFileParser = new ProbabilityMatchEngine<ProjectItem>();
             appConfigFileParser.With(new AppConfigFileReferenceMatcher());
             var projectBindings = projects.Where(x => x.AppConfigPath != null)

@@ -19,8 +19,10 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
             {
                 throw new ArgumentException($"Reference file could not be found in specified location: {fullPath}", nameof(fullPath));
             }
+
             var assembly = Assembly.LoadFile(fullPath);
             var assemblyName = assembly.GetName();
+
             AssemblyName = assemblyName.Name;
             Version = assemblyName.Version.ToString();
         }
