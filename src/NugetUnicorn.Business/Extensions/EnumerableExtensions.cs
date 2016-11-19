@@ -101,6 +101,16 @@ namespace NugetUnicorn.Business.Extensions
             }
             return result;
         }
+
+        public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> enumerable)
+        {
+            var result = new Dictionary<TKey, TValue>();
+            foreach (var keyValuePair in enumerable)
+            {
+                result.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+            return result;
+        }
     }
 
     public class LambdaEqualityComparer<T> : IEqualityComparer<T>
