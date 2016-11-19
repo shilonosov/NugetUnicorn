@@ -95,7 +95,7 @@ namespace NugetUnicorn.Business.SourcesParser
                         }
                         else
                         {
-                            observer.OnNextInfo("all seems to be ok");
+                            observer.OnNextInfo($"project: {item.Key} report: all seems to be ok");
                         }
                     }
                     catch (Exception e)
