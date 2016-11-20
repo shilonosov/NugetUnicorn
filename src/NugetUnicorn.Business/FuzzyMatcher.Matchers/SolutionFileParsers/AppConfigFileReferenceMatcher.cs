@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml;
 
 using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
@@ -60,27 +59,6 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
         // TODO: review, refactor
         public class AppConfigFilePropabilityMetadata : SomeProbabilityMatchMetadata<ProjectItem>
         {
-            public class BindingRedirectModel
-            {
-                public string Name { get; private set; }
-                public string NewVersion { get; private set; }
-                public string PublicKeyToken { get; private set; }
-                public string Culture { get; private set; }
-
-                public BindingRedirectModel(string name, string newVersion, string publicKeyToken, string culture)
-                {
-                    Name = name;
-                    NewVersion = newVersion;
-                    PublicKeyToken = publicKeyToken;
-                    Culture = culture;
-                }
-
-                public override string ToString()
-                {
-                    return $"{Name}, {NewVersion}, {PublicKeyToken}, {Culture}";
-                }
-            }
-
             public string FullPath { get; }
 
             public IList<BindingRedirectModel> RedirectModels { get; private set; }
@@ -121,7 +99,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
                     return result;
                 }
 
-                for(var i = 0; i < nodes.Count; ++i)
+                for (var i = 0; i < nodes.Count; ++i)
                 {
                     var node = nodes.Item(i);
                     if (node == null)
@@ -142,7 +120,30 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 
                 return result;
             }
-        }
 
+            public class BindingRedirectModel
+            {
+                public string Name { get; }
+
+                public string NewVersion { get; }
+
+                public string PublicKeyToken { get; }
+
+                public string Culture { get; }
+
+                public BindingRedirectModel(string name, string newVersion, string publicKeyToken, string culture)
+                {
+                    Name = name;
+                    NewVersion = newVersion;
+                    PublicKeyToken = publicKeyToken;
+                    Culture = culture;
+                }
+
+                public override string ToString()
+                {
+                    return $"{Name}, {NewVersion}, {PublicKeyToken}, {Culture}";
+                }
+            }
+        }
     }
 }

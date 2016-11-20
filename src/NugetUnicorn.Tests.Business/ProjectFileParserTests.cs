@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;

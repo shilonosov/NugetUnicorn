@@ -15,6 +15,58 @@ namespace NugetUnicorn.Business
 
         private readonly IDictionary<PackageKey, StorageEntity<TValue>> _cache;
 
+        public Storage(string rootFolder)
+        {
+            _rootFolder = rootFolder;
+            _cache = new Dictionary<PackageKey, StorageEntity<TValue>>();
+        }
+
+        public bool HasKey(PackageKey key)
+        {
+            if (_cache.ContainsKey(key))
+            {
+                return true;
+            }
+            if (File.Exists(ComposeFilePath(key)))
+            {
+                _cache[key] = Load(key);
+                return true;
+            }
+            return false;
+        }
+
+        public bool HasId(string packageId)
+        {
+            return Directory.Exists(ComposeDirectoryPath(packageId));
+        }
+
+        public StorageEntity<TValue> GetByKey(PackageKey key)
+        {
+            return HasKey(key) ? _cache[key] : default(StorageEntity<TValue>);
+        }
+
+        public StorageEntity<IEnumerable<TValue>> GetById(string packageId)
+        {
+            var directoryPath = ComposeDirectoryPath(packageId);
+            if (Directory.Exists(directoryPath))
+            {
+                var lastModified = GetDirectoryLastModifiedDate(directoryPath);
+                var storageEntities = Directory.GetFiles(directoryPath, "*." + PackageKey.FileExtension)
+                                               .Select(x => GetByKey(new PackageKey(packageId, Path.GetFileNameWithoutExtension(x))))
+                                               .Select(x => x.Value);
+
+                return new StorageEntity<IEnumerable<TValue>>(lastModified, storageEntities);
+            }
+            return new StorageEntity<IEnumerable<TValue>>();
+        }
+
+        public StorageEntity<TValue> Put(PackageKey key, TValue value)
+        {
+            var storageEntity = Save(key, value);
+            _cache[key] = storageEntity;
+            return storageEntity;
+        }
+
         private string ComposeFilePath(PackageKey key)
         {
             return Path.Combine(_rootFolder, key.FullPath);
@@ -43,31 +95,6 @@ namespace NugetUnicorn.Business
         private static string ComposeMarkerFilePath(string directoryPath)
         {
             return Path.Combine(directoryPath, MARKER_TXT);
-        }
-
-        public Storage(string rootFolder)
-        {
-            _rootFolder = rootFolder;
-            _cache = new Dictionary<PackageKey, StorageEntity<TValue>>();
-        }
-
-        public bool HasKey(PackageKey key)
-        {
-            if (_cache.ContainsKey(key))
-            {
-                return true;
-            }
-            if (File.Exists(ComposeFilePath(key)))
-            {
-                _cache[key] = Load(key);
-                return true;
-            }
-            return false;
-        }
-
-        public bool HasId(string packageId)
-        {
-            return Directory.Exists(ComposeDirectoryPath(packageId));
         }
 
         private StorageEntity<TValue> Load(PackageKey key)
@@ -108,33 +135,6 @@ namespace NugetUnicorn.Business
                 File.Create(markerFilePath)
                     .Dispose();
             }
-        }
-
-        public StorageEntity<TValue> GetByKey(PackageKey key)
-        {
-            return HasKey(key) ? _cache[key] : default(StorageEntity<TValue>);
-        }
-
-        public StorageEntity<IEnumerable<TValue>> GetById(string packageId)
-        {
-            var directoryPath = ComposeDirectoryPath(packageId);
-            if (Directory.Exists(directoryPath))
-            {
-                var lastModified = GetDirectoryLastModifiedDate(directoryPath);
-                var storageEntities = Directory.GetFiles(directoryPath, "*." + PackageKey.FileExtension)
-                                               .Select(x => GetByKey(new PackageKey(packageId, Path.GetFileNameWithoutExtension(x))))
-                                               .Select(x => x.Value);
-
-                return new StorageEntity<IEnumerable<TValue>>(lastModified, storageEntities);
-            }
-            return new StorageEntity<IEnumerable<TValue>>();
-        }
-
-        public StorageEntity<TValue> Put(PackageKey key, TValue value)
-        {
-            var storageEntity = Save(key, value);
-            _cache[key] = storageEntity;
-            return storageEntity;
         }
     }
 }

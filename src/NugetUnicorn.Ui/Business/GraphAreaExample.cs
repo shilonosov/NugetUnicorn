@@ -4,5 +4,7 @@ using QuickGraph;
 
 namespace NugetUnicorn.Ui.Business
 {
-    public class GraphAreaExample : GraphArea<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>> { }
+    public class GraphAreaExample : GraphArea<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
+    {
+    }
 }

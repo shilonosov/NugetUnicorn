@@ -20,7 +20,7 @@ namespace NugetUnicorn.Business.Dto
             }
 
             HasVersionRestriction = true;
-            VersionSpec = new VersionSpec()
+            VersionSpec = new VersionSpec
                               {
                                   MinVersion = versionSpec.MinVersion,
                                   MaxVersion = versionSpec.MaxVersion,

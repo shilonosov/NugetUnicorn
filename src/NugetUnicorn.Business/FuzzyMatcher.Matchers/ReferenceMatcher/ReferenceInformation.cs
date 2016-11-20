@@ -6,8 +6,9 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {
     public class ReferenceInformation
     {
-        public string AssemblyName { get; private set; }
-        public string Version { get; private set; }
+        public string AssemblyName { get; }
+
+        public string Version { get; }
 
         public ReferenceInformation(string fullPath)
         {

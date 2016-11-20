@@ -20,15 +20,14 @@
                     <Button DockPanel.Dock="Right" Margin="10,0,0,0" Padding="3,0" Command="{Binding SelectSolutionCommand}" IsEnabled="{Binding UiSwitch.Value}">Select</Button>
                     <TextBox Margin="10,0,0,0" Text="{Binding SelectedSolutionProperty.Value}"/>
                 </DockPanel>
-                <TextBox Text="{Binding ReportString.Value}" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                </TextBox>
+                <TextBox Text="{Binding ReportString.Value}" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
             </DockPanel>
         </TabItem>
         <TabItem Header="Fancy Graphs">
             <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300px"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="300px" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <ListBox Grid.Column="0" ItemsSource="{Binding Packages}" >

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Concurrency;
+﻿using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Runtime.InteropServices;
 
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;

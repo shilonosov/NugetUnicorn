@@ -2,5 +2,7 @@
 
 namespace NugetUnicorn.Ui.Business
 {
-    public class GraphExample : BidirectionalGraph<DataVertex, DataEdge> { }
+    public class GraphExample : BidirectionalGraph<DataVertex, DataEdge>
+    {
+    }
 }

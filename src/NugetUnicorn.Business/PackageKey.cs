@@ -20,7 +20,8 @@ namespace NugetUnicorn.Business
         {
         }
 
-        public PackageKey(IPackage package) : this(package.Id, package.Version.ToString())
+        public PackageKey(IPackage package)
+            : this(package.Id, package.Version.ToString())
         {
         }
 
@@ -30,7 +31,8 @@ namespace NugetUnicorn.Business
             Version = version;
         }
 
-        public PackageKey(string id) : this(id, null)
+        public PackageKey(string id)
+            : this(id, null)
         {
         }
 

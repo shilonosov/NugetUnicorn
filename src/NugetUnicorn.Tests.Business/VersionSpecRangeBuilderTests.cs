@@ -2,11 +2,7 @@
 
 using NugetUnicorn.Business;
 
-using NuGet;
-
 using NUnit.Framework;
-
-using Rhino.Mocks;
 
 namespace NugetUnicorn.Tests.Business
 {
@@ -19,13 +15,13 @@ namespace NugetUnicorn.Tests.Business
             const string ExpectedString = "[1.0, 2.0]";
             const string PackageId = "some package id";
 
-            var existingVersions = new List<PackageKey>()
+            var existingVersions = new List<PackageKey>
                                        {
                                            new PackageKey(PackageId, "1.0"),
                                            new PackageKey(PackageId, "2.0")
                                        };
 
-            var packageKeys = new List<PackageKey>()
+            var packageKeys = new List<PackageKey>
                                   {
                                       new PackageKey(PackageId, "1.0"),
                                       new PackageKey(PackageId, "2.0")
@@ -44,13 +40,13 @@ namespace NugetUnicorn.Tests.Business
             const string ExpectedString = "[1.0, 2.0]";
             const string PackageId = "some package id";
 
-            var existingVersions = new List<PackageKey>()
+            var existingVersions = new List<PackageKey>
                                        {
                                            new PackageKey(PackageId, "2.0"),
                                            new PackageKey(PackageId, "1.0")
                                        };
 
-            var packageKeys = new List<PackageKey>()
+            var packageKeys = new List<PackageKey>
                                   {
                                       new PackageKey(PackageId, "2.0"),
                                       new PackageKey(PackageId, "1.0")
@@ -69,7 +65,7 @@ namespace NugetUnicorn.Tests.Business
             const string ExpectedString = "[1.0, 2.0]";
             const string PackageId = "some package id";
 
-            var existingVersions = new List<PackageKey>()
+            var existingVersions = new List<PackageKey>
                                        {
                                            new PackageKey(PackageId, "0.1"),
                                            new PackageKey(PackageId, "1.0"),
@@ -77,7 +73,7 @@ namespace NugetUnicorn.Tests.Business
                                            new PackageKey(PackageId, "3.0")
                                        };
 
-            var packageKeys = new List<PackageKey>()
+            var packageKeys = new List<PackageKey>
                                   {
                                       new PackageKey(PackageId, "1.0"),
                                       new PackageKey(PackageId, "2.0")
@@ -97,14 +93,14 @@ namespace NugetUnicorn.Tests.Business
             const string ExpectedString2 = "[3.0]";
             const string PackageId = "some package id";
 
-            var existingVersions = new List<PackageKey>()
+            var existingVersions = new List<PackageKey>
                                        {
                                            new PackageKey(PackageId, "1.0"),
                                            new PackageKey(PackageId, "2.0"),
                                            new PackageKey(PackageId, "3.0")
                                        };
 
-            var packageKeys = new List<PackageKey>()
+            var packageKeys = new List<PackageKey>
                                   {
                                       new PackageKey(PackageId, "1.0"),
                                       new PackageKey(PackageId, "3.0")
@@ -125,7 +121,7 @@ namespace NugetUnicorn.Tests.Business
             const string ExpectedString2 = "[4.0, 5.0]";
             const string PackageId = "some package id";
 
-            var existingVersions = new List<PackageKey>()
+            var existingVersions = new List<PackageKey>
                                        {
                                            new PackageKey(PackageId, "1.0"),
                                            new PackageKey(PackageId, "2.0"),
@@ -134,7 +130,7 @@ namespace NugetUnicorn.Tests.Business
                                            new PackageKey(PackageId, "5.0")
                                        };
 
-            var packageKeys = new List<PackageKey>()
+            var packageKeys = new List<PackageKey>
                                   {
                                       new PackageKey(PackageId, "1.0"),
                                       new PackageKey(PackageId, "2.0"),

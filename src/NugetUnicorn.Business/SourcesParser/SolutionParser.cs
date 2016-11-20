@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
 
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
 
 namespace NugetUnicorn.Business.SourcesParser
 {
@@ -21,7 +18,7 @@ namespace NugetUnicorn.Business.SourcesParser
         }
 
         public static IEnumerable<ProjectPoco> GetProjects(string solutionFilePath)
-        //public static IEnumerable<Project> GetProjects(string solutionFilePath)
+            //public static IEnumerable<Project> GetProjects(string solutionFilePath)
         {
             var solutionFile = SolutionFile.Parse(solutionFilePath);
             return solutionFile.ProjectsInOrder

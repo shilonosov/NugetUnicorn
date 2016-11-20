@@ -4,11 +4,12 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
 {
     public class ContentHolder
     {
-        public ContentHolder Parent { get; }
-
         private readonly List<SaxEvent> _content;
 
-        public ContentHolder() : this(null)
+        public ContentHolder Parent { get; }
+
+        public ContentHolder()
+            : this(null)
         {
         }
 

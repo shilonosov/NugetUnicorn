@@ -69,13 +69,13 @@ namespace NugetUnicorn.Business
                                   {
                                       var packageId = x.Id;
                                       return _nugetLibraryProxy.GetById(packageId)
-                                                     .Where(y => x.HasVersionRestriction && x.VersionSpec.Satisfies(y.SemanticVersion))
-                                                     .SelectMany(
-                                                         y =>
-                                                             {
-                                                                 var packageVersion = y.Key.Version;
-                                                                 return InspectPackage(new [] { new PackageKey(packageId, packageVersion)});
-                                                             });
+                                                               .Where(y => x.HasVersionRestriction && x.VersionSpec.Satisfies(y.SemanticVersion))
+                                                               .SelectMany(
+                                                                   y =>
+                                                                       {
+                                                                           var packageVersion = y.Key.Version;
+                                                                           return InspectPackage(new[] { new PackageKey(packageId, packageVersion) });
+                                                                       });
                                   });
         }
     }

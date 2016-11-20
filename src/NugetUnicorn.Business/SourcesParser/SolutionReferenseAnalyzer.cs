@@ -6,7 +6,9 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.Build.Evaluation;
+
 using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
@@ -37,15 +39,16 @@ namespace NugetUnicorn.Business.SourcesParser
         {
             return Observable.Create<Message.Info>(
                 x =>
-                {
-                    return _scheduler.ScheduleAsync(
-                        async (scheduler, cancellationToken) =>
-                                await AnalyzeSolution(_solutionPath, x, cancellationToken));
-                });
+                    {
+                        return _scheduler.ScheduleAsync(
+                            async (scheduler, cancellationToken) =>
+                            await AnalyzeSolution(_solutionPath, x, cancellationToken));
+                    });
         }
 
-        private static Task AnalyzeSolution(string solutionPath, IObserver<Message.Info> observer,
-            CancellationToken disposable)
+        private static Task AnalyzeSolution(string solutionPath,
+                                            IObserver<Message.Info> observer,
+                                            CancellationToken disposable)
         {
             return Task.Run(() => AnalyzeInternal(solutionPath, observer), disposable);
         }
@@ -59,15 +62,15 @@ namespace NugetUnicorn.Business.SourcesParser
                 observer.OnNextInfo($"starting the {solutionPath} analysis...");
                 observer.OnNextInfo("parsing the solution...");
                 var projects = SolutionParser.GetProjects(solutionPath)
-                    .ToList();
+                                             .ToList();
 
                 observer.OnNextInfo("parsed.");
 
                 var referenceMatcher = new ProbabilityMatchEngine<ReferenceBase>();
                 referenceMatcher.With(new NugetReference())
-                    .With(new SystemReference())
-                    .With(new DllReference())
-                    .With(new ProjectReference());
+                                .With(new SystemReference())
+                                .With(new DllReference())
+                                .With(new ProjectReference());
 
                 var wrongReferenceMatcher = new ProbabilityMatchEngine<DllMetadata>();
                 wrongReferenceMatcher.With(new WrongReferenceMatcher(projects));
@@ -115,13 +118,16 @@ namespace NugetUnicorn.Business.SourcesParser
             }
         }
 
-        private static IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> ComposeReferencesByProjects(IObserver<Message.Info> observer, Dictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>> referenceMetadatas)
+        private static IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> ComposeReferencesByProjects(IObserver<Message.Info> observer,
+                                                                                                               Dictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>>
+                                                                                                                   referenceMetadatas)
         {
             return referenceMetadatas.Transform(x => x.OfType<ExistingReferenceMetadataBase>())
                                      .Transform((x, y) => y.Select(z => ComposeReferenceInformation(z, x, observer)).Where(z => z != null));
         }
 
-        private static IDictionary<ProjectPoco, IEnumerable<string>> ComposeDifferentVersionsReferencesErrors(IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referenceMetadatas)
+        private static IDictionary<ProjectPoco, IEnumerable<string>> ComposeDifferentVersionsReferencesErrors(
+            IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referenceMetadatas)
         {
             return referenceMetadatas.SelectMany(
                 x => x.Value.Select(y => new Tuple<ProjectPoco, string, string>(x.Key, y.AssemblyName, y.Version)))
@@ -150,7 +156,8 @@ namespace NugetUnicorn.Business.SourcesParser
             return
                 enumerable.Select(
                     x =>
-                    new KeyValuePair<ProjectPoco, string>(x.Item2,
+                    new KeyValuePair<ProjectPoco, string>(
+                        x.Item2,
                         $"{x.Item2} reference {referenceName} {x.Item1} but there are projects which has same reference but with different version: {string.Join(", ", enumerable.Where(y => y.Item1 != x.Item1 && y.Item2 != x.Item2).Select(y => $"{y.Item2} -> {referenceName} v {y.Item1}"))}"
                         ));
         }
@@ -160,58 +167,58 @@ namespace NugetUnicorn.Business.SourcesParser
             IProbabilityMatchEngine<DllMetadata> wrongReferenceMatcher)
         {
             return referenceMetadatas.Transform(x => x.OfType<DllMetadata>())
-                .Transform(
-                    x =>
-                        x
-                            .FindBestMatch
-                            <DllMetadata, WrongReferencePropabilityMetadata
-                            >(
-                                wrongReferenceMatcher,
-                                0d))
-                .Transform(
-                    x => x.Select(
-                        y =>
-                                $"found possible misreference: {y.Reference} (solution contains project with the same target name: {y.SuspectedProject.Name} / {y.SuspectedProject.TargetName})"));
+                                     .Transform(
+                                         x =>
+                                         x.FindBestMatch<DllMetadata, WrongReferencePropabilityMetadata>(wrongReferenceMatcher, 0d))
+                                     .Transform(
+                                         x => x.Select(
+                                             y =>
+                                             $"found possible misreference: {y.Reference} (solution contains project with the same target name: {y.SuspectedProject.Name} / {y.SuspectedProject.TargetName})"));
         }
 
         private static IEnumerable<KeyValuePair<ProjectPoco, IEnumerable<string>>> ComposeBindingsErrors(
-            IList<ProjectPoco> projects, IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referencesByProjects)
+            IList<ProjectPoco> projects,
+            IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referencesByProjects)
         {
             var appConfigFileParser = new ProbabilityMatchEngine<ProjectItem>();
             appConfigFileParser.With(new AppConfigFileReferenceMatcher());
             var projectBindings = projects.Where(x => x.AppConfigPath != null)
-                .ToDictionary(
-                    x => x,
-                    x =>
-                    {
-                        var r = new AppConfigFileReferenceMatcher.AppConfigFilePropabilityMetadata(null, null, 0d,
-                            x.AppConfigPath);
-                        return r.RedirectModels;
-                    });
+                                          .ToDictionary(
+                                              x => x,
+                                              x =>
+                                                  {
+                                                      var r = new AppConfigFileReferenceMatcher.AppConfigFilePropabilityMetadata(
+                                                          null,
+                                                          null,
+                                                          0d,
+                                                          x.AppConfigPath);
+                                                      return r.RedirectModels;
+                                                  });
 
             return projectBindings.Join(
                 referencesByProjects,
                 x => x.Key,
                 y => y.Key,
                 (x, y) =>
-                {
-                    var bindingReferences = x.Value.Select(z => new ReferenceInformation(z.Name, z.NewVersion));
+                    {
+                        var bindingReferences = x.Value.Select(z => new ReferenceInformation(z.Name, z.NewVersion));
 
-                    var incorrect = bindingReferences.Join(
+                        var incorrect = bindingReferences.Join(
                             y.Value,
                             x1 => x1.AssemblyName,
                             y1 => y1.AssemblyName,
                             (x1, y1) => new Tuple<ReferenceInformation, ReferenceInformation>(x1, y1))
-                        .Where(z => !string.Equals(z.Item1.Version, z.Item2.Version))
-                        .Select(
-                            z => $"reference mismatch: redirect: {z.Item1.ToString()}, reference: {z.Item2.ToString()}");
+                                                         .Where(z => !string.Equals(z.Item1.Version, z.Item2.Version))
+                                                         .Select(
+                                                             z => $"reference mismatch: redirect: {z.Item1.ToString()}, reference: {z.Item2.ToString()}");
 
-                    return new KeyValuePair<ProjectPoco, IEnumerable<string>>(x.Key, incorrect);
-                });
+                        return new KeyValuePair<ProjectPoco, IEnumerable<string>>(x.Key, incorrect);
+                    });
         }
 
-        private static ReferenceInformation ComposeReferenceInformation(ExistingReferenceMetadataBase z, ProjectPoco x,
-            IObserver<Message.Info> observer)
+        private static ReferenceInformation ComposeReferenceInformation(ExistingReferenceMetadataBase z,
+                                                                        ProjectPoco x,
+                                                                        IObserver<Message.Info> observer)
         {
             try
             {

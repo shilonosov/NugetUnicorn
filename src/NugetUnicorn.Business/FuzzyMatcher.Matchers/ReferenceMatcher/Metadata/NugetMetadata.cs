@@ -1,7 +1,4 @@
-using System.IO;
-
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata

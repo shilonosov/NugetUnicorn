@@ -48,14 +48,15 @@ namespace NUgetUnicorn.Console
             var commonPart = new SolutionReferenseAnalyzer(Scheduler.CurrentThread, options.SolutionPath).Run()
                                                                                                          .Catch<Message.Info, Exception>(
                                                                                                              y => Observable.Return(new Message.Fatal($"error: {y.Message}")))
-                                                                                                             .Timestamp()
+                                                                                                         .Timestamp()
                                                                                                          .ToEnumerable()
                                                                                                          .ToArray();
-            var itemsToPrint = commonPart.Where(x =>
-                {
-                    var itemType = x.Value.GetType();
-                    return itemType.IsSubclassOf(filterType) || itemType == filterType;
-                });
+            var itemsToPrint = commonPart.Where(
+                x =>
+                    {
+                        var itemType = x.Value.GetType();
+                        return itemType.IsSubclassOf(filterType) || itemType == filterType;
+                    });
 
             foreach (var outputItem in itemsToPrint)
             {

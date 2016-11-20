@@ -11,15 +11,15 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
     {
         public IReadOnlyCollection<ReferenceBase> References { get; private set; }
 
-        public string TargetName { get; private set; }
+        public string TargetName { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public string AppConfigPath { get; private set; }
 
         public string PackagesConfigPath { get; private set; }
 
-        public FilePath ProjectFilePath { get; private set; }
+        public FilePath ProjectFilePath { get; }
 
         public ProjectPoco(string fullPath, IEnumerable<ProjectStructureItem> projectStructure)
         {

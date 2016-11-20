@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
 
@@ -31,12 +30,27 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
             if (end != null && end.IsClosed)
             {
                 HandleClosedTag(end);
-                return;
             }
             else if (end != null)
-            { 
+            {
                 HandleCloseTag(end);
-                return;
+            }
+        }
+
+        public void OnError(Exception error)
+        {
+            _observer.OnError(error);
+        }
+
+        public void OnCompleted()
+        {
+            if (_stack.Count == 0)
+            {
+                _observer.OnCompleted();
+            }
+            else
+            {
+                _observer.OnError(new ApplicationException("inconsintent event sequence"));
             }
         }
 
@@ -70,23 +84,6 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
         private void HandleEmptyTag(SaxEvent value, StartElementEvent start)
         {
             _stack.Push(value);
-        }
-
-        public void OnError(Exception error)
-        {
-            _observer.OnError(error);
-        }
-
-        public void OnCompleted()
-        {
-            if (_stack.Count == 0)
-            {
-                _observer.OnCompleted();
-            }
-            else
-            {
-                _observer.OnError(new ApplicationException("inconsintent event sequence"));
-            }
         }
     }
 }

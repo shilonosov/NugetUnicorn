@@ -4,6 +4,8 @@ namespace NugetUnicorn.Ui.Business
 {
     public class DataEdge : EdgeBase<DataVertex>
     {
+        public string Text { get; set; }
+
         public DataEdge(DataVertex source, DataVertex target, double weight = 1)
             : base(source, target, weight)
         {
@@ -13,8 +15,6 @@ namespace NugetUnicorn.Ui.Business
             : base(null, null, 1)
         {
         }
-
-        public string Text { get; set; }
 
         public override string ToString()
         {

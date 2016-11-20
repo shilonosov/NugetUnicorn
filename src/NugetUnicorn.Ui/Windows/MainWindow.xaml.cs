@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -34,7 +33,7 @@ namespace NugetUnicorn.Ui.Windows
 
             var packageKeys = new[]
                                   {
-                                      new PackageKey("NServiceBus.NHibernate", "4.5.5"),
+                                      new PackageKey("NServiceBus.NHibernate", "4.5.5")
                                       //new PackageKey("FluentNHibernate", "1.4.0"),
                                       //new PackageKey("Common.Logging", "3.3.1"),
                                       ////new PackageKey("Common.Logging", "3.3.1"),
@@ -224,7 +223,7 @@ namespace NugetUnicorn.Ui.Windows
             logicCore.AsyncAlgorithmCompute = false;
 
             GgArea.LogicCore = logicCore;
- 
+
             GgArea.GenerateGraph(true, true);
 
             /* 

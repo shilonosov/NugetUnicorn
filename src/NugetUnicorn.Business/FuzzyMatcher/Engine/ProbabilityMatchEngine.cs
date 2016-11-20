@@ -14,12 +14,6 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Engine
             _matchList = new List<ProbabilityMatch<T>>();
         }
 
-        public ProbabilityMatchEngine<T> With(ProbabilityMatch<T> probabilityMatch)
-        {
-            _matchList.Add(probabilityMatch);
-            return this;
-        }
-
         public ProbabilityMatchMetadata<T> FindBestMatch(T sample)
         {
             //TODO: [DS] split CaltulateProbability so it would calculate probability only, compose metadate after sort
@@ -27,6 +21,12 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Engine
                              .OrderByDescending(x => x.Probability)
                              .FirstOrDefault()
                              .IfNull(() => new NonePropabilityMatchMetadata<T>(sample));
+        }
+
+        public ProbabilityMatchEngine<T> With(ProbabilityMatch<T> probabilityMatch)
+        {
+            _matchList.Add(probabilityMatch);
+            return this;
         }
     }
 }

@@ -29,10 +29,12 @@ namespace NugetUnicorn.Business.Extensions
             var newMaxVersion = PickVersion(thisMax, otherMax, newMaxPicker);
             var newMinVersion = PickVersion(thisMin, otherMin, newMinPicker);
 
-            var minVersionInclusive = ((thisMin != null && thisVersion.IsMinInclusive) || (thisMin == null)) && ((otherMin != null && otherVersion.IsMinInclusive) || (otherMin == null));
-            var maxVersionInclusive = ((thisMax != null && thisVersion.IsMaxInclusive) || (thisMax == null)) && ((otherMax != null && otherVersion.IsMaxInclusive) || (otherMax == null));
+            var minVersionInclusive = ((thisMin != null && thisVersion.IsMinInclusive) || (thisMin == null))
+                                      && ((otherMin != null && otherVersion.IsMinInclusive) || (otherMin == null));
+            var maxVersionInclusive = ((thisMax != null && thisVersion.IsMaxInclusive) || (thisMax == null))
+                                      && ((otherMax != null && otherVersion.IsMaxInclusive) || (otherMax == null));
 
-            return new VersionSpec()
+            return new VersionSpec
                        {
                            MaxVersion = newMaxVersion,
                            MinVersion = newMinVersion,

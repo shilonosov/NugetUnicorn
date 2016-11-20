@@ -4,5 +4,7 @@ using QuickGraph;
 
 namespace NugetUnicorn.Ui.Business
 {
-    public class GxLogicCoreExample : GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>> { }
+    public class GxLogicCoreExample : GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
+    {
+    }
 }

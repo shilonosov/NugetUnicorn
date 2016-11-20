@@ -1,12 +1,3 @@
-using System.Linq;
-
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
-
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 {
     //public class NugetPackageFileMatcher : ProbabilityMatch<ReferenceBase>

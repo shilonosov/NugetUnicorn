@@ -7,7 +7,8 @@ using NugetUnicorn.Business.Extensions;
 
 namespace NugetUnicorn.Business
 {
-    public class Node<T> where T: class
+    public class Node<T>
+        where T : class
     {
         public T Value { get; protected set; }
 
@@ -20,7 +21,8 @@ namespace NugetUnicorn.Business
         {
         }
 
-        public Node(T value) : this(value, null)
+        public Node(T value)
+            : this(value, null)
         {
         }
 
@@ -70,9 +72,7 @@ namespace NugetUnicorn.Business
     public class PackageNode : Node<PackageDto>
     {
         public PackageNode()
-            : base()
         {
-            
         }
 
         public PackageNode(PackageDto value)

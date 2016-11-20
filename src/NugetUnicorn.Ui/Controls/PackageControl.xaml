@@ -9,14 +9,14 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200px"></ColumnDefinition>
-            <ColumnDefinition Width="60px"></ColumnDefinition>
-            <ColumnDefinition Width="20px"></ColumnDefinition>
+            <ColumnDefinition Width="200px" />
+            <ColumnDefinition Width="60px" />
+            <ColumnDefinition Width="20px" />
         </Grid.ColumnDefinitions>
         
         <Label Grid.Column="0" Content="{Binding ControlName.Value}" />
         <ComboBox Grid.Column="1" SelectedIndex="{Binding SelectedVersionIndex.Value}" ItemsSource="{Binding Versions}" />
-        <CheckBox Grid.Column="2" IsChecked="{Binding FixVersion.Value}"></CheckBox>
+        <CheckBox Grid.Column="2" IsChecked="{Binding FixVersion.Value}" />
     </Grid>
 </UserControl>
 

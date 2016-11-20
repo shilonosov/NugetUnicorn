@@ -5,7 +5,9 @@ namespace NugetUnicorn.Business.Utils
     public class FilePath
     {
         public string DirectoryPath { get; }
+
         public string FileName { get; }
+
         public string FullPath { get; }
 
         public FilePath(string fullPath)

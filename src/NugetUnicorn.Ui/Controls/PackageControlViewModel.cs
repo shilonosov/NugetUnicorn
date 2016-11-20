@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using NugetUnicorn.Business;
 
@@ -14,8 +11,11 @@ namespace NugetUnicorn.Ui.Controls
     public class PackageControlModel
     {
         public string Name { get; }
+
         public string Version { get; }
+
         public IList<string> AvailableVersions { get; }
+
         public int FixVersionIndex { get; }
 
         public PackageControlModel(PackageKey packageKey, IEnumerable<PackageKey> availableVersions)
@@ -31,8 +31,11 @@ namespace NugetUnicorn.Ui.Controls
     public class PackageControlViewModel
     {
         public ReactiveProperty<string> ControlName { get; }
+
         public ReactiveCollection<string> Versions { get; }
+
         public ReactiveProperty<int> SelectedVersionIndex { get; }
+
         public ReactiveProperty<bool> FixVersion { get; }
 
         public PackageControlViewModel(PackageControlModel model)

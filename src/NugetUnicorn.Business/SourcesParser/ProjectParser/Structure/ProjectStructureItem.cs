@@ -123,8 +123,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
         private static ProjectStructureItem HandlePackagesConfig(CompositeSaxEvent compositeSaxEvent, IReadOnlyCollection<SaxEvent> descendants)
         {
             var appConfigPath = descendants?.OfType<EndElementEvent>()
-                ?.FirstOrDefault(x => string.Equals(x.Name, "None"))
-                ?.Attributes["Include"];
+                                           ?.FirstOrDefault(x => string.Equals(x.Name, "None"))
+                                           ?.Attributes["Include"];
             return new PackagesConfigItem(appConfigPath);
         }
 
@@ -137,7 +137,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
             }
 
             var item = descendants?.OfType<EndElementEvent>()
-                ?.FirstOrDefault(x => string.Equals(x.Name, "None"));
+                                  ?.FirstOrDefault(x => string.Equals(x.Name, "None"));
 
             if (item == null)
             {
@@ -156,8 +156,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
         private static ProjectStructureItem HandleAppConfig(CompositeSaxEvent compositeSaxEvent, IReadOnlyCollection<SaxEvent> descendants)
         {
             var appConfigPath = descendants?.OfType<EndElementEvent>()
-                ?.FirstOrDefault(x => string.Equals(x.Name, "None"))
-                ?.Attributes["Include"];
+                                           ?.FirstOrDefault(x => string.Equals(x.Name, "None"))
+                                           ?.Attributes["Include"];
             return new AppConfigItem(appConfigPath);
         }
 
@@ -170,7 +170,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
             }
 
             var item = descendants?.OfType<EndElementEvent>()
-                ?.FirstOrDefault(x => string.Equals(x.Name, "None"));
+                                  ?.FirstOrDefault(x => string.Equals(x.Name, "None"));
 
             if (item == null)
             {

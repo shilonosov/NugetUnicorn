@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 
 using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
 
 namespace NugetUnicorn.Business.Microsoft.Build
 {
@@ -13,8 +12,8 @@ namespace NugetUnicorn.Business.Microsoft.Build
         public static string GetHintPath(this ProjectItem projectItem)
         {
             return projectItem?.Metadata
-                                       .FirstOrDefault(x => string.Equals(x.Name, CONST_HINTPATH))?
-                                       .EvaluatedValue;
+                               .FirstOrDefault(x => string.Equals(x.Name, CONST_HINTPATH))?
+                               .EvaluatedValue;
         }
 
         public static string GetMetadataPrintStrign(this ProjectItem projectItem)

@@ -4,7 +4,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax
     {
         public string Content { get; }
 
-        public StringElementEvent(string content) : base()
+        public StringElementEvent(string content)
         {
             Content = content;
         }
