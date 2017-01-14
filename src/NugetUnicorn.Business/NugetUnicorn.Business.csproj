@@ -99,6 +99,9 @@
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\ReferenceMetadataBase.cs" />
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\SystemReference.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\AppConfigFileReferenceMatcher.cs" />
+    <Compile Include="SourcesParser\ProjectParser\AppConfigParser.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Models\AppConfigModel.cs" />
+    <Compile Include="SourcesParser\ProjectParser\Models\BindingRedirectModel.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\NugetPackageFileMatcher.cs" />
     <Compile Include="Extensions\XmlNodeExtensions.cs" />
     <Compile Include="FuzzyMatcher\Engine\IProbabilityMatchEngine.cs" />
