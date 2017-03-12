@@ -89,6 +89,7 @@
     <Compile Include="Extensions\NugetExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="FuzzyMatcher.Matchers\Analyzer\WrongReferencePropabilityMetadata.cs" />
+    <Compile Include="FuzzyMatcher.Matchers\Exceptions\DuplicateProjectOutputNameException.cs" />
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\DllReference.cs" />
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\Metadata\ExistingReferenceMetadataBase.cs" />
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\Metadata\ProjectMetadata.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="PackageKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourcesParser\Message.cs" />
+    <Compile Include="SourcesParser\ProjectParser\IProjectPoco.cs" />
     <Compile Include="Utils\FilePath.cs" />
     <Compile Include="SourcesParser\ProjectParser\ProjectPoco.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\Parser\SaxParserObserver.cs" />
