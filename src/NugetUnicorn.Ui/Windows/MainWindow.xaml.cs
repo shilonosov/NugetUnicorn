@@ -31,9 +31,9 @@ namespace NugetUnicorn.Ui.Windows
             //Set Fill zooming strategy so whole graph will be always visible
             GgZoomctrl.ZoomToFill();
 
-            var packageKeys = new[]
+            var packageKeys = new PackageKey[]
                                   {
-                                      new PackageKey("NServiceBus.NHibernate", "4.5.5")
+                                      //new PackageKey("NServiceBus.NHibernate", "4.5.5")
                                       //new PackageKey("FluentNHibernate", "1.4.0"),
                                       //new PackageKey("Common.Logging", "3.3.1"),
                                       ////new PackageKey("Common.Logging", "3.3.1"),
