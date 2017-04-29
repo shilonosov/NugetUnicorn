@@ -7,17 +7,17 @@ using NugetUnicorn.Business.Utils;
 
 namespace NugetUnicorn.Business.SourcesParser.ProjectParser
 {
-    public class ProjectPoco
+    public class ProjectPoco : IProjectPoco
     {
-        public IReadOnlyCollection<ReferenceBase> References { get; private set; }
+        public IReadOnlyCollection<ReferenceBase> References { get; }
 
         public string TargetName { get; }
 
         public string Name { get; }
 
-        public string AppConfigPath { get; private set; }
+        public string AppConfigPath { get; }
 
-        public string PackagesConfigPath { get; private set; }
+        public string PackagesConfigPath { get; }
 
         public FilePath ProjectFilePath { get; }
 
@@ -53,4 +53,4 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
             return $"{Name} - {TargetName}";
         }
     }
-}
+}   

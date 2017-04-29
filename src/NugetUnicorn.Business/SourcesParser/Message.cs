@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace NugetUnicorn.Business.SourcesParser
 {
@@ -20,6 +21,11 @@ namespace NugetUnicorn.Business.SourcesParser
             observable.OnNext(new Error(message));
         }
 
+        public static void OnNextError(this IObserver<Info> observable, Exception exception)
+        {
+            observable.OnNext(new Error(exception));
+        }
+
         public static void OnNextFatal(this IObserver<Info> observable, string message)
         {
             observable.OnNext(new Fatal(message));
@@ -36,7 +42,7 @@ namespace NugetUnicorn.Business.SourcesParser
 
         public class Info
         {
-            public string Message { get; protected set; }
+            public string Message { get; }
 
             public Info(string message)
             {
@@ -59,10 +65,26 @@ namespace NugetUnicorn.Business.SourcesParser
 
         public class Error : Warning
         {
+            private readonly Exception _exception;
+
             public Error(string message)
                 : base(message)
             {
             }
+
+            public Error(Exception exception)
+                : this(exception.Message)
+            {
+                _exception = exception;
+            }
+
+            public override string ToString()
+            {
+                var strings = new[] { Message, _exception == null ? string.Empty : _exception.StackTrace }.Where(x => !string.IsNullOrEmpty(x));
+                var messageString = string.Join(Environment.NewLine, strings);
+                return $"{GetType().Name}: {messageString}";
+            }
+
         }
 
         public class Fatal : Error

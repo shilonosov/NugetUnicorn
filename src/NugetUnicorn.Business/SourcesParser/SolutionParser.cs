@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Build.Construction;
@@ -32,9 +33,9 @@ namespace NugetUnicorn.Business.SourcesParser
             {
                 return ProjectFileParser.Parse(x.AbsolutePath);
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                throw new ApplicationException($"error parsing project [{x.ProjectName}] -- [{x.AbsolutePath}]", e);
             }
         }
 
