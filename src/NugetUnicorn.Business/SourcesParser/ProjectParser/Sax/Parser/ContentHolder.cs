@@ -6,6 +6,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
     {
         private readonly List<SaxEvent> _content;
 
+        public StartElementEvent StartSaxEvent { get; }
+
         public ContentHolder Parent { get; }
 
         public ContentHolder()
@@ -13,10 +15,16 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
         {
         }
 
-        public ContentHolder(ContentHolder parent)
+        public ContentHolder(StartElementEvent startSaxEvent)
+            : this(startSaxEvent, null)
+        {
+        }
+
+        public ContentHolder(StartElementEvent startSaxEvent, ContentHolder parent)
         {
             _content = new List<SaxEvent>();
             Parent = parent;
+            StartSaxEvent = startSaxEvent;
         }
 
         public void Append(SaxEvent contentItem)

@@ -7,6 +7,8 @@ namespace NugetUnicorn.Business.Extensions
     public interface ICanEvaluate<out TV>
     {
         TV Evaluate();
+
+        IEnumerable<TV> EvaluateAll();
     }
 
     public interface ISwitch<out T, TV> : ICanEvaluate<TV>
@@ -56,6 +58,12 @@ namespace NugetUnicorn.Business.Extensions
                 return default(TV);
             }
             return result.Item2(_subject);
+        }
+
+        public IEnumerable<TV> EvaluateAll()
+        {
+            return _cases.Where(x => x.Item1(_subject))
+                .Select(x => x.Item2(_subject));
         }
     }
 }

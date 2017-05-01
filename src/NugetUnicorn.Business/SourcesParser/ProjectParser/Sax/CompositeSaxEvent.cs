@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax
 {
@@ -18,6 +19,11 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax
             Name = name;
             Attributes = attributes;
             IsClosed = isClosed;
+        }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name} {Name}:{Uri}, {nameof(IsClosed)}:{IsClosed}, {string.Join(", ", Attributes.Select(x => $"{x.Key}:{x.Value}"))}";
         }
     }
 }

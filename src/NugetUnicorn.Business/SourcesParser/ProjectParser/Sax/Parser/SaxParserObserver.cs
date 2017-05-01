@@ -1,39 +1,44 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+using NugetUnicorn.Business.Extensions;
 
 namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
 {
-    public class SaxParserObserver : IObserver<SaxEvent>
+    public class SaxParserObserver<T> : IObserver<SaxEvent>
     {
-        private readonly IObserver<ProjectStructureItem> _observer;
+        private readonly IObserver<T> _observer;
+
+        private readonly IXmlModelBuilder<T> _modelBuilder;
 
         private readonly Stack<SaxEvent> _stack;
 
-        public SaxParserObserver(IObserver<ProjectStructureItem> observer)
+        public SaxParserObserver(IObserver<T> observer, IXmlModelBuilder<T> modelBuilder)
         {
             _observer = observer;
+            _modelBuilder = modelBuilder;
             _stack = new Stack<SaxEvent>();
         }
 
         public void OnNext(SaxEvent value)
         {
-            var start = value as StartElementEvent;
-            if (start != null)
+            if (value is StartElementEvent start)
             {
                 HandleEmptyTag(value, start);
                 return;
             }
 
-            var end = value as EndElementEvent;
-            if (end != null && end.IsClosed)
+            if (value is EndElementEvent end)
             {
-                HandleClosedTag(end);
-            }
-            else if (end != null)
-            {
-                HandleCloseTag(end);
+                if (end.IsClosed)
+                {
+                    HandleClosedTag(end);
+                }
+                else
+                {
+                    HandleCloseTag(end);
+                }
             }
         }
 
@@ -57,19 +62,19 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
         private void HandleCloseTag(EndElementEvent end)
         {
             var elementName = end.Name;
-            var content = end.Descendants;
-            var startCandidate = _stack.Peek() as StartElementEvent;
-            if (startCandidate != null)
+            var start = _stack.Peek() as StartElementEvent;
+            if (start != null)
             {
-                if (!string.Equals(startCandidate.Name, elementName))
+                if (!string.Equals(start.Name, elementName))
                 {
-                    _observer.OnError(new ApplicationException($"unexpected closing tag. expected: {startCandidate.Name} actual: {elementName}"));
+                    _observer.OnError(new ApplicationException($"unexpected closing tag. expected: {start.Name} actual: {elementName}"));
                 }
                 else
                 {
                     _stack.Pop();
                     //TODO: check if end and start are interchangable here
-                    _observer.OnNext(ProjectStructureItem.Build(startCandidate, content));
+                    _modelBuilder.ComposeElement(start, end.Descendants)
+                        .ForEachItem(_observer.OnNext);
                     return;
                 }
             }
@@ -78,7 +83,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
 
         private void HandleClosedTag(EndElementEvent end)
         {
-            _observer.OnNext(ProjectStructureItem.Build(end));
+            _modelBuilder.ComposeElement(end)
+                         .ForEachItem(_observer.OnNext);
         }
 
         private void HandleEmptyTag(SaxEvent value, StartElementEvent start)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml;
 
@@ -28,14 +29,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
             var result = new List<BindingRedirectModel>();
 
             var doc = new XmlDocument();
-            try
-            {
-                doc.Load(configFilePath);
-            }
-            catch
-            {
-                return result;
-            }
+            doc.Load(configFilePath);
 
             var manager = new XmlNamespaceManager(doc.NameTable);
             manager.AddNamespace("bindings", "urn:schemas-microsoft-com:asm.v1");
@@ -43,13 +37,13 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
             var root = doc.DocumentElement;
             if (root == null)
             {
-                return result;
+                throw new ApplicationException($"error reading packages configuration file {configFilePath} -- can't load!");
             }
 
             var nodes = root.SelectNodes("/configuration/runtime/bindings:assemblyBinding/bindings:dependentAssembly", manager);
             if (nodes == null)
             {
-                return result;
+                throw new ApplicationException($"error reading application configuration file {configFilePath} -- no root element found!");
             }
 
             for (var i = 0; i < nodes.Count; ++i)

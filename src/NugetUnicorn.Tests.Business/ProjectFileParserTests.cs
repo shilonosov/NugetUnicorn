@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
@@ -26,6 +29,107 @@ namespace NugetUnicorn.Tests.Business
             var parsedReferences = sut.Parse(_fullPath);
 
             Assert.AreEqual(32, parsedReferences.References.Count);
+        }
+
+        [Test]
+        public void TestParsePackagesConfig()
+        {
+            const string Xml =@"<?xml version=""1.0"" encoding=""utf-8""?>
+                                <Project>
+                                    <ItemGroup>
+                                        <None Include=""packages.config"">
+                                            <SubType>Designer</SubType>
+                                        </None>
+                                    </ItemGroup>
+                                </Project>";
+
+            using (var textReader = new StringReader(Xml))
+            {
+                using (var projectStructureItemSubject = new Subject<ProjectStructureItem>())
+                {
+                    var projectStructureItems = new List<ProjectStructureItem>();
+                    projectStructureItemSubject.Subscribe(projectStructureItems.Add);
+
+                    var sut = new ProjectFileParser();
+                    sut.Parse(textReader, projectStructureItemSubject);
+
+                    var items = projectStructureItems
+                        .OfType<PackagesConfigItem>()
+                        .ToList();
+
+                    Assert.AreEqual(1, items.Count);
+                }
+            }
+        }
+
+        [Test]
+        public void TestParseReferences()
+        {
+            const string Xml = @"<?xml version=""1.0"" encoding=""utf-8""?>
+                                <Project>
+                                    <ItemGroup>
+                                        <Reference Include=""System.Data"" />
+                                        <Reference Include=""System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"">
+                                            <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+                                        <Private>True</Private>
+                                        </Reference>
+                                    </ItemGroup>
+                                </Project>";
+
+            using (var textReader = new StringReader(Xml))
+            {
+                using (var projectStructureItemSubject = new Subject<ProjectStructureItem>())
+                {
+                    var projectStructureItems = new List<ProjectStructureItem>();
+                    projectStructureItemSubject.Subscribe(projectStructureItems.Add);
+
+                    var sut = new ProjectFileParser();
+                    sut.Parse(textReader, projectStructureItemSubject);
+
+                    var items = projectStructureItems
+                        .OfType<ReferenceBase>()
+                        .ToList();
+
+                    Assert.AreEqual(2, items.Count);
+                }
+            }
+        }
+
+        [Test]
+        public void TestParsePackagesConfig2()
+        {
+            const string Xml = @"<?xml version=""1.0"" encoding=""utf-8""?>
+                                <Project>
+                                    <ItemGroup>
+                                        <None Include=""app.config"" />
+                                        <None Include=""packages.config"" />
+                                    </ItemGroup>
+                                </Project>";
+            using (var textReader = new StringReader(Xml))
+            {
+                using (var projectStructureItemSubject = new Subject<ProjectStructureItem>())
+                {
+                    var projectStructureItems = new List<ProjectStructureItem>();
+                    projectStructureItemSubject.Subscribe(projectStructureItems.Add);
+
+                    var sut = new ProjectFileParser();
+                    sut.Parse(textReader, projectStructureItemSubject);
+
+                    var packagesConfig = projectStructureItems
+                        .OfType<PackagesConfigItem>()
+                        .ToList();
+
+                    Assert.AreEqual(1, packagesConfig.Count);
+                    Assert.AreEqual("packages.config", packagesConfig.First().RelativePath);
+
+                    var appConfig = projectStructureItems
+                        .OfType<AppConfigItem>()
+                        .ToList();
+
+                    Assert.AreEqual(1, appConfig.Count);
+                    Assert.AreEqual("app.config", appConfig.First().RelativePath);
+                }
+            }
         }
 
         [Test]

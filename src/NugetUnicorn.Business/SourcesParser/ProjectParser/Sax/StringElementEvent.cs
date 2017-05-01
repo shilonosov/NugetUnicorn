@@ -8,5 +8,10 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax
         {
             Content = content;
         }
+
+        public override string ToString()
+        {
+            return Content;
+        }
     }
 }

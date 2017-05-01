@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -21,14 +22,27 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
 
         public IObservable<SaxEvent> Parse(string fullPath, IScheduler scheduler)
         {
-            return Observable.Create<SaxEvent>(x => scheduler.Schedule(() => ParseInternal(fullPath, x)));
+            return Observable.Create<SaxEvent>(x => scheduler.Schedule(() => { ParseInternal(fullPath, x); }));
+        }
+
+        public IObservable<SaxEvent> Parse(TextReader textReader, IScheduler scheduler)
+        {
+            return Observable.Create<SaxEvent>(x => scheduler.Schedule(() => { ParseInternal(textReader, x); }));
         }
 
         private void ParseInternal(string fullPath, IObserver<SaxEvent> x)
         {
+            using (var inputStream = new StreamReader(fullPath))
+            {
+                ParseInternal(inputStream, x);
+            }
+        }
+
+        private void ParseInternal(TextReader textReader, IObserver<SaxEvent> x)
+        {
             try
             {
-                using (var reader = new XmlTextReader(fullPath))
+                using (var reader = new XmlTextReader(textReader))
                 {
                     while (reader.Read())
                     {
@@ -47,32 +61,15 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
         {
             reader.NodeType
                   .Switch<XmlNodeType, Unit>()
-                  .Case(y => y == XmlNodeType.Element && reader.IsEmptyElement, y => HandleEndElement(reader, x))
+                  .Case(y => y == XmlNodeType.Element && reader.IsEmptyElement, y => HandleEmptyElement(reader, x))
                   .Case(y => y == XmlNodeType.Element, y => HandleStartElement(reader, x))
                   .Case(y => y == XmlNodeType.EndElement, y => HandleEndElement(reader, x))
                   .Case(y => y == XmlNodeType.Text, y => HandleTextElement(reader))
                   .Evaluate();
         }
 
-        private Unit HandleTextElement(XmlTextReader reader)
+        private Unit HandleEmptyElement(XmlTextReader reader, IObserver<SaxEvent> observer)
         {
-            _contentHolder.Append(new StringElementEvent(reader.Value));
-            return Unit.Default;
-        }
-
-        private Unit HandleEndElement(XmlTextReader reader, IObserver<SaxEvent> observer)
-        {
-            var content = _contentHolder.GetContent();
-            var isClosed = reader.IsEmptyElement;
-            if (isClosed)
-            {
-                content = new List<SaxEvent>();
-            }
-            else
-            {
-                _contentHolder = _contentHolder.Parent;
-            }
-
             var attributes = new Dictionary<string, string>();
             var strUri = reader.NamespaceURI;
             var strName = reader.Name;
@@ -86,7 +83,29 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
             }
 
             var readOnlyAttributes = new ReadOnlyDictionary<string, string>(attributes);
-            var endElementEvent = new EndElementEvent(strUri, strName, isClosed, readOnlyAttributes, content);
+            var endElementEvent = new EndElementEvent(strUri, strName, true, readOnlyAttributes, new List<SaxEvent>());
+
+            _contentHolder.Append(endElementEvent);
+            observer.OnNext(endElementEvent);
+
+            return Unit.Default;
+        }
+
+        private Unit HandleTextElement(XmlTextReader reader)
+        {
+            _contentHolder.Append(new StringElementEvent(reader.Value));
+            return Unit.Default;
+        }
+
+        private Unit HandleEndElement(XmlTextReader reader, IObserver<SaxEvent> observer)
+        {
+            var content = _contentHolder.GetContent();
+            var startElement = _contentHolder.StartSaxEvent;
+            _contentHolder = _contentHolder.Parent;
+
+            var strUri = reader.NamespaceURI;
+            var strName = reader.Name;
+            var endElementEvent = new EndElementEvent(strUri, strName, false, startElement.Attributes, content);
 
             _contentHolder.Append(endElementEvent);
 
@@ -97,8 +116,6 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
 
         private Unit HandleStartElement(XmlTextReader reader, IObserver<SaxEvent> observer)
         {
-            _contentHolder = new ContentHolder(_contentHolder);
-
             var attributes = new Dictionary<string, string>();
             var strUri = reader.NamespaceURI;
             var strName = reader.Name;
@@ -111,7 +128,9 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
                     attributes.Add(reader.Name, reader.Value);
                 }
             }
-            observer.OnNext(new StartElementEvent(strUri, strName, isClosed, new ReadOnlyDictionary<string, string>(attributes)));
+            var startElementEvent = new StartElementEvent(strUri, strName, isClosed, new ReadOnlyDictionary<string, string>(attributes));
+            _contentHolder = new ContentHolder(startElementEvent, _contentHolder);
+            observer.OnNext(startElementEvent);
 
             return Unit.Default;
         }

@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
@@ -20,7 +22,14 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata
         public virtual ReferenceInformation GetReferenceInformation(ProjectPoco projectPoco)
         {
             var fullPath = Path.IsPathRooted(_targetPath) ? _targetPath : Path.Combine(projectPoco.ProjectFilePath.DirectoryPath, _targetPath);
-            return new ReferenceInformation(fullPath);
+            try
+            {
+                return new ReferenceInformation(fullPath);
+            }
+            catch(Exception e)
+            {
+                throw new ApplicationException($"Error parsing {projectPoco.Name} -- {fullPath}", e);
+            }
         }
     }
 }

@@ -82,30 +82,25 @@ namespace NugetUnicorn.Business.SourcesParser
                 var incorrectReferences = ComposeBindingsErrors(projects, referencesByProjects);
                 var differentVersionsReferencesErrors = ComposeDifferentVersionsReferencesErrors(referencesByProjects);
                 var assemblyRedirectsVsReferencesErrors = ComposeRedirectsVsReferencesErrors(projects);
+                var inconsistentNugetPackageReferences = ComposeInconsistentNugetPackageReferences(projects, referencesByProjects, referenceMetadatas);
 
-                var errorReport = projectReferenceVsDirectDllReference.Merge(incorrectReferences)
-                                                                      .Merge(differentVersionsReferencesErrors)
-                                                                      .Merge(assemblyRedirectsVsReferencesErrors);
-
-                foreach (var item in errorReport)
-                {
-                    try
-                    {
-                        if (item.Value.Any())
-                        {
-                            var errorMessage = string.Join(Environment.NewLine, item.Value.Select(x => $"possible issue: {x}"));
-                            observer.OnNextError($"project: {item.Key} report:{Environment.NewLine}{errorMessage}");
-                        }
-                        else
-                        {
-                            observer.OnNextInfo($"project: {item.Key} report: all seems to be ok");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        observer.OnNextError(e.Message);
-                    }
-                }
+                projectReferenceVsDirectDllReference.Merge(incorrectReferences)
+                                                    .Merge(differentVersionsReferencesErrors)
+                                                    .Merge(assemblyRedirectsVsReferencesErrors)
+                                                    .Merge(inconsistentNugetPackageReferences)
+                                                    .ToObservable()
+                                                    .Select(
+                                                        x =>
+                                                            {
+                                                                if (x.Value.Any())
+                                                                {
+                                                                    var errorMessage = string.Join(Environment.NewLine, x.Value.Select(y => $"possible issue: {y}"));
+                                                                    return new Message.Error($"project: {x.Key} report:{Environment.NewLine}{errorMessage}");
+                                                                }
+                                                                return new Message.Info($"project: {x.Key} report: all seems to be ok");
+                                                            })
+                                                    .Catch<Message.Info, Exception>(x => Observable.Return<Message.Info>(new Message.Error(x)))
+                                                    .Subscribe(observer);
             }
             catch (Exception e)
             {
@@ -113,9 +108,23 @@ namespace NugetUnicorn.Business.SourcesParser
             }
             finally
             {
-                observer.OnNextInfo("analysis completed.");
+                observer.OnNext(new Message.Info("analysis completed."));
                 observer.OnCompleted();
             }
+        }
+
+        private static IEnumerable<KeyValuePair<ProjectPoco, IEnumerable<string>>> ComposeInconsistentNugetPackageReferences(
+            IList<ProjectPoco> projects,
+            IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referencesByProjects,
+            IDictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>> referenceMetadatas)
+        {
+            var packagesConfigParser = PackagesConfigParser.Instance;
+            return projects.Select(
+                x =>
+                    {
+                        var packageModel = packagesConfigParser.ReadPackages(x.PackagesConfigPath);
+                        return new KeyValuePair<ProjectPoco, IEnumerable<string>>(x, new string[0]);
+                    });
         }
 
         private static IDictionary<ProjectPoco, IEnumerable<string>> ComposeRedirectsVsReferencesErrors(IList<ProjectPoco> projects)
