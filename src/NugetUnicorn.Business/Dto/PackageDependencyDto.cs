@@ -1,4 +1,5 @@
 ﻿using NuGet;
+using PackageDependency = NuGet.PackageDependency;
 
 namespace NugetUnicorn.Business.Dto
 {

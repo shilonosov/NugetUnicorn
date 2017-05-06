@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Versioning;
 
 using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
@@ -21,6 +22,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
 
         public FilePath ProjectFilePath { get; }
 
+        public TargetFramework TargetFramework { get; }
+
         public ProjectPoco(string fullPath, IEnumerable<ProjectStructureItem> projectStructure)
         {
             ProjectFilePath = new FilePath(fullPath);
@@ -31,12 +34,14 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
             var projectOutputType = string.Empty;
             var appConfigRelativePath = string.Empty;
             var packagesConfigRelativePath = string.Empty;
+            TargetFramework targetFramework = null;
 
             projectStructure.Switch()
                             .Case(x => x is ReferenceBase, x => references.Add(x as ReferenceBase))
                             .Case(x => x is AssemblyName, x => projectOutputName = (x as AssemblyName).Name)
                             .Case(x => x is OutputType, x => projectOutputType = (x as OutputType).Extension)
                             .Case(x => x is AppConfigItem, x => appConfigRelativePath = (x as AppConfigItem).RelativePath)
+                            .Case(x => x is TargetFramework, x => targetFramework = x as TargetFramework)
                             .Case(x => x is PackagesConfigItem, x => packagesConfigRelativePath = (x as PackagesConfigItem).RelativePath)
                             .Default(x => { })
                             .Do(x => { });
@@ -45,6 +50,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
             TargetName = $"{projectOutputName}.{projectOutputType}";
             Name = projectOutputName;
             AppConfigPath = string.IsNullOrEmpty(appConfigRelativePath) ? null : Path.Combine(ProjectFilePath.DirectoryPath, appConfigRelativePath);
+            TargetFramework = targetFramework;
             PackagesConfigPath = string.IsNullOrEmpty(packagesConfigRelativePath) ? null : Path.Combine(ProjectFilePath.DirectoryPath, packagesConfigRelativePath);
         }
 

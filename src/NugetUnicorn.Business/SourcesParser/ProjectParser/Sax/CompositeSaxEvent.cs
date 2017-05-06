@@ -13,7 +13,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax
 
         public bool IsClosed { get; }
 
-        protected CompositeSaxEvent(string uri, string name, bool isClosed, IReadOnlyDictionary<string, string> attributes)
+        protected CompositeSaxEvent(string uri, string name, bool isClosed, IReadOnlyDictionary<string, string> attributes, string[] path) : base(path)
         {
             Uri = uri;
             Name = name;

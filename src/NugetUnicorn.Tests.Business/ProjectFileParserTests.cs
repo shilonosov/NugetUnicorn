@@ -34,7 +34,7 @@ namespace NugetUnicorn.Tests.Business
         [Test]
         public void TestParsePackagesConfig()
         {
-            const string Xml =@"<?xml version=""1.0"" encoding=""utf-8""?>
+            const string Xml = @"<?xml version=""1.0"" encoding=""utf-8""?>
                                 <Project>
                                     <ItemGroup>
                                         <None Include=""packages.config"">
@@ -171,6 +171,17 @@ namespace NugetUnicorn.Tests.Business
             var parsedReferences = sut.Parse(_fullPath);
 
             Assert.AreEqual("NugetUnicorn.Ui.exe", parsedReferences.TargetName);
+        }
+
+        [Test]
+        public void TestParseTargetFrameworkVersion()
+        {
+            var sut = new ProjectFileParser();
+
+            var projectPoco = sut.Parse(_fullPath);
+
+            Assert.NotNull(projectPoco);
+            Assert.AreEqual("net461", projectPoco.TargetFramework.ShortFolderName);
         }
     }
 }

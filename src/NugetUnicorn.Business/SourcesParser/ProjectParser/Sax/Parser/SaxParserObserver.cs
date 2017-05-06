@@ -23,21 +23,23 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
 
         public void OnNext(SaxEvent value)
         {
-            if (value is StartElementEvent start)
+            var startElement = value as StartElementEvent;
+            if (startElement != null)
             {
-                HandleEmptyTag(value, start);
+                HandleEmptyTag(value, startElement);
                 return;
             }
 
-            if (value is EndElementEvent end)
+            var endElement = value as EndElementEvent;
+            if (endElement != null)
             {
-                if (end.IsClosed)
+                if (endElement.IsClosed)
                 {
-                    HandleClosedTag(end);
+                    HandleClosedTag(endElement);
                 }
                 else
                 {
-                    HandleCloseTag(end);
+                    HandleCloseTag(endElement);
                 }
             }
         }

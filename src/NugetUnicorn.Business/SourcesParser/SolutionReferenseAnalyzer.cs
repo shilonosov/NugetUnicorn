@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -15,6 +16,10 @@ using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+
+using NuGet.Frameworks;
+using NuGet.Packaging;
+using NuGet.ProjectManagement;
 
 using ProjectReference = NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType.ProjectReference;
 
@@ -81,12 +86,14 @@ namespace NugetUnicorn.Business.SourcesParser
 
                 var incorrectReferences = ComposeBindingsErrors(projects, referencesByProjects);
                 var differentVersionsReferencesErrors = ComposeDifferentVersionsReferencesErrors(referencesByProjects);
-                var assemblyRedirectsVsReferencesErrors = ComposeRedirectsVsReferencesErrors(projects);
-                var inconsistentNugetPackageReferences = ComposeInconsistentNugetPackageReferences(projects, referencesByProjects, referenceMetadatas);
+                //[DS]: this world is just not readey yet for this check...
+                //var assemblyRedirectsVsReferencesErrors = ComposeRedirectsVsReferencesErrors(projects);
+                var solutionDirectory = Path.GetDirectoryName(solutionPath);
+                var inconsistentNugetPackageReferences = ComposeInconsistentNugetPackageReferences(solutionDirectory, projects, referencesByProjects, referenceMetadatas);
 
                 projectReferenceVsDirectDllReference.Merge(incorrectReferences)
                                                     .Merge(differentVersionsReferencesErrors)
-                                                    .Merge(assemblyRedirectsVsReferencesErrors)
+                                                    //.Merge(assemblyRedirectsVsReferencesErrors)
                                                     .Merge(inconsistentNugetPackageReferences)
                                                     .ToObservable()
                                                     .Select(
@@ -114,6 +121,7 @@ namespace NugetUnicorn.Business.SourcesParser
         }
 
         private static IEnumerable<KeyValuePair<ProjectPoco, IEnumerable<string>>> ComposeInconsistentNugetPackageReferences(
+            string solutionPath,
             IList<ProjectPoco> projects,
             IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> referencesByProjects,
             IDictionary<ProjectPoco, IEnumerable<ReferenceMetadataBase>> referenceMetadatas)
@@ -122,9 +130,65 @@ namespace NugetUnicorn.Business.SourcesParser
             return projects.Select(
                 x =>
                     {
-                        var packageModel = packagesConfigParser.ReadPackages(x.PackagesConfigPath);
-                        return new KeyValuePair<ProjectPoco, IEnumerable<string>>(x, new string[0]);
-                    });
+                        using (var pcs = File.Open(x.PackagesConfigPath, FileMode.Open))
+                        {
+                            var pcr = new PackagesConfigReader(pcs);
+                            return pcr.GetPackages()
+                                .Select(
+                                y =>
+                                    {
+                                        var packageIdentity = y.PackageIdentity;
+                                        var packagePathResolver = new PackagePathResolver(Path.Combine(solutionPath, "packages"));
+                                        var packageDirectory = packagePathResolver
+                                            .GetInstallPath(packageIdentity);
+                                        var packageFileName = packagePathResolver.GetPackageFileName(packageIdentity);
+                                        //var dlls = Directory.GetFiles(packagesPath, "*.dll");
+
+                                        var packagePath = Path.Combine(packageDirectory, packageFileName);
+                                        using (var nupkgStream = File.Open(packagePath, FileMode.Open))
+                                        {
+                                            var nupkgReader = new PackageArchiveReader(nupkgStream);
+                                            var referenceItems = nupkgReader.GetReferenceItems()
+                                                .ToArray();
+
+                                            //var nugetFramefork = NuGetFramework.ParseFrameworkName(x.TargetFramework.Version, DefaultFrameworkNameProvider.Instance);
+                                            var nugetFramefork = NuGetFramework.Parse(x.TargetFramework.Version);
+                                            var r = GetMostCompatibleGroup(nugetFramefork, referenceItems);
+
+                                            var nsr = nupkgReader.NuspecReader;
+                                            Debug.WriteLine(nugetFramefork.GetShortFolderName());
+                                            var frameworkReferenceGroups = nsr.GetFrameworkReferenceGroups()
+                                                                              .ToArray();
+                                            Debug.WriteLine(frameworkReferenceGroups.Length);
+                                            var nearestFramework = NuGetFrameworkUtility.GetNearest(frameworkReferenceGroups, nugetFramefork);
+                                            //Debug.WriteLine(nearestFramework.TargetFramework.GetShortFolderName());
+                                        }
+
+                                        return new KeyValuePair<ProjectPoco, IEnumerable<string>>(x, new string[0]);
+                                    });
+                        }
+                    })
+                    .SelectMany(x => x);
+        }
+
+        internal static FrameworkSpecificGroup GetMostCompatibleGroup(NuGetFramework projectTargetFramework, FrameworkSpecificGroup[] itemGroups)
+        {
+            var frameworkReducer = new FrameworkReducer();
+            var mostCompatibleFramework = frameworkReducer.GetNearest(projectTargetFramework, itemGroups.Select(x => x.TargetFramework));
+            if (mostCompatibleFramework == null)
+                return null;
+
+            var frameworkSpecificGroup = itemGroups.FirstOrDefault(x => x.TargetFramework.Equals(mostCompatibleFramework));
+            return IsValid(frameworkSpecificGroup) ? frameworkSpecificGroup : null;
+        }
+
+        internal static bool IsValid(FrameworkSpecificGroup frameworkSpecificGroup)
+        {
+            if (frameworkSpecificGroup == null)
+                return false;
+            if (!frameworkSpecificGroup.HasEmptyFolder && !frameworkSpecificGroup.Items.Any())
+                return !frameworkSpecificGroup.TargetFramework.Equals(NuGetFramework.AnyFramework);
+            return true;
         }
 
         private static IDictionary<ProjectPoco, IEnumerable<string>> ComposeRedirectsVsReferencesErrors(IList<ProjectPoco> projects)

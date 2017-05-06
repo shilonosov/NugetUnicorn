@@ -6,8 +6,8 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax
     {
         public IReadOnlyCollection<SaxEvent> Descendants { get; }
 
-        public EndElementEvent(string uri, string name, bool isClosed, IReadOnlyDictionary<string, string> attributes, IReadOnlyCollection<SaxEvent> descendants)
-            : base(uri, name, isClosed, attributes)
+        public EndElementEvent(string uri, string name, bool isClosed, IReadOnlyDictionary<string, string> attributes, IReadOnlyCollection<SaxEvent> descendants, string[] path)
+            : base(uri, name, isClosed, attributes, path)
         {
             Descendants = descendants;
         }

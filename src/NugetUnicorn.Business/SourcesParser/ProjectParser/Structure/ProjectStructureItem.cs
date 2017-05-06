@@ -98,7 +98,21 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
                            .Case(IsOutputType, x => HandleOutputType(x, descendants))
                            .Case(x => IsAppConfig(x, descendants), x => HandleAppConfig(x, descendants))
                            .Case(x => IsPackagesConfig(x, descendants), x => HandlePackagesConfig(x, descendants))
+                           .Case(IsTargetFrameworkVersion, x => HandleTargetFrameworkVersion(x, descendants))
                            .EvaluateAll();
+        }
+
+        private static ProjectStructureItem HandleTargetFrameworkVersion(CompositeSaxEvent compositeSaxEvent, IReadOnlyCollection<SaxEvent> descendants)
+        {
+            var value = descendants.OfType<StringElementEvent>()
+                                   .FirstOrDefault()
+                                   ?.Content;
+            return new TargetFramework(value);
+        }
+
+        private static bool IsTargetFrameworkVersion(CompositeSaxEvent compositeSaxEvent)
+        {
+            return compositeSaxEvent.Path.SequenceEqual(new[] { "Project", "PropertyGroup", "TargetFrameworkVersion" });
         }
 
         private static ProjectStructureItem HandlePackagesConfig(CompositeSaxEvent compositeSaxEvent, IReadOnlyCollection<SaxEvent> descendants)
