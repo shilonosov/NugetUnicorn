@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace NugetUnicorn.Business.SourcesParser
 {
@@ -84,7 +83,6 @@ namespace NugetUnicorn.Business.SourcesParser
                 var messageString = string.Join(Environment.NewLine, strings);
                 return $"{GetType().Name}: {messageString}";
             }
-
         }
 
         public class Fatal : Error

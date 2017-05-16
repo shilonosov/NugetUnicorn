@@ -4,9 +4,9 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
 {
     public class OutputType : ProjectStructureItem
     {
-        public string Content { get; private set; }
+        public string Content { get; }
 
-        public string Extension { get; private set; }
+        public string Extension { get; }
 
         public OutputType(string outputType)
         {

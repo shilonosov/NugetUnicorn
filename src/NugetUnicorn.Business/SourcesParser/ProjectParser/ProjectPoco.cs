@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Versioning;
 
 using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
@@ -10,18 +9,6 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
 {
     public class ProjectPoco : IProjectPoco
     {
-        public IReadOnlyCollection<ReferenceBase> References { get; }
-
-        public string TargetName { get; }
-
-        public string Name { get; }
-
-        public string AppConfigPath { get; }
-
-        public string PackagesConfigPath { get; }
-
-        public FilePath ProjectFilePath { get; }
-
         public TargetFramework TargetFramework { get; }
 
         public ProjectPoco(string fullPath, IEnumerable<ProjectStructureItem> projectStructure)
@@ -54,9 +41,21 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
             PackagesConfigPath = string.IsNullOrEmpty(packagesConfigRelativePath) ? null : Path.Combine(ProjectFilePath.DirectoryPath, packagesConfigRelativePath);
         }
 
+        public IReadOnlyCollection<ReferenceBase> References { get; }
+
+        public string TargetName { get; }
+
+        public string Name { get; }
+
+        public string AppConfigPath { get; }
+
+        public string PackagesConfigPath { get; }
+
+        public FilePath ProjectFilePath { get; }
+
         public override string ToString()
         {
             return $"{Name} - {TargetName}";
         }
     }
-}   
+}

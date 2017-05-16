@@ -18,9 +18,9 @@ namespace NugetUnicorn.Business
 
     public struct StorageEntity<TValue>
     {
-        public DateTime LastModified { get; private set; }
+        public DateTime LastModified { get; }
 
-        public TValue Value { get; private set; }
+        public TValue Value { get; }
 
         public StorageEntity(DateTime lastModifiedDateTime, TValue value)
         {

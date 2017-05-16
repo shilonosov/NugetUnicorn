@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using NugetUnicorn.Business.Extensions;
 
@@ -76,7 +75,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser
                     _stack.Pop();
                     //TODO: check if end and start are interchangable here
                     _modelBuilder.ComposeElement(start, end.Descendants)
-                        .ForEachItem(_observer.OnNext);
+                                 .ForEachItem(_observer.OnNext);
                     return;
                 }
             }

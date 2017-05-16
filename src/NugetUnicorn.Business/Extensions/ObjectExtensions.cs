@@ -63,7 +63,7 @@ namespace NugetUnicorn.Business.Extensions
         public IEnumerable<TV> EvaluateAll()
         {
             return _cases.Where(x => x.Item1(_subject))
-                .Select(x => x.Item2(_subject));
+                         .Select(x => x.Item2(_subject));
         }
     }
 }

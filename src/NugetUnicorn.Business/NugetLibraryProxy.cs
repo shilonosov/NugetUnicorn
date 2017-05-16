@@ -83,9 +83,10 @@ namespace NugetUnicorn.Business
             var keys = packageKeys as PackageKey[] ?? packageKeys.ToArray();
             var orderedByVersion = keys.Select(x => new Tuple<PackageKey, SemanticVersion>(x, new SemanticVersion(x.Version)))
                                        .OrderBy(x => x.Item2);
-            var existingVersions = GetById(keys.First().Id).Select(x => new Tuple<PackageKey, SemanticVersion>(x.Key, x.SemanticVersion))
-                                                           .OrderBy(x => x.Item2)
-                                                           .AsEnumerable();
+            var existingVersions = GetById(keys.First().Id)
+                .Select(x => new Tuple<PackageKey, SemanticVersion>(x.Key, x.SemanticVersion))
+                .OrderBy(x => x.Item2)
+                .AsEnumerable();
 
             var firstKey = orderedByVersion.First();
             existingVersions = existingVersions.SkipWhile(x => x.Item2 != firstKey.Item2);

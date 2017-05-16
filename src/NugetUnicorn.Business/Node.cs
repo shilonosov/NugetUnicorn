@@ -50,7 +50,8 @@ namespace NugetUnicorn.Business
             Childs.ForEachItem(x => x.ForEachItem(nodeItemAction));
         }
 
-        public TV Filter<TV>(Func<T, bool> filterFunc) where TV : Node<T>, new()
+        public TV Filter<TV>(Func<T, bool> filterFunc)
+            where TV : Node<T>, new()
         {
             var thisSatisfies = filterFunc(Value);
             if (!thisSatisfies)

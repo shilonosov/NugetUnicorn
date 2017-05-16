@@ -1,7 +1,9 @@
 ﻿using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Exceptions;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
+
 using NUnit.Framework;
+
 using Rhino.Mocks;
 
 namespace NugetUnicorn.Tests.Business
@@ -17,11 +19,11 @@ namespace NugetUnicorn.Tests.Business
             const string projectOutput1 = "output1";
 
             var projectPocos = new[]
-            {
-                ConfigureStub(projectOutput1, projectName1),
-                ConfigureStub(projectOutput1, projectName2),
-                ConfigureStub("output3", "project3"),
-            };
+                                   {
+                                       ConfigureStub(projectOutput1, projectName1),
+                                       ConfigureStub(projectOutput1, projectName2),
+                                       ConfigureStub("output3", "project3")
+                                   };
 
             try
             {

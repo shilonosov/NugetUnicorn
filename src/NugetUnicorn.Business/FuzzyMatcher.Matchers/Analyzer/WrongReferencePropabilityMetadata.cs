@@ -11,7 +11,11 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer
 
         public string Reference { get; }
 
-        public WrongReferencePropabilityMetadata(DllMetadata sample, ProbabilityMatch<DllMetadata> match, double probability, string sampleProjectPath, IProjectPoco suspectedProject)
+        public WrongReferencePropabilityMetadata(DllMetadata sample,
+                                                 ProbabilityMatch<DllMetadata> match,
+                                                 double probability,
+                                                 string sampleProjectPath,
+                                                 IProjectPoco suspectedProject)
             : base(sample, match, probability)
         {
             //Project = sample.Sample.Project;

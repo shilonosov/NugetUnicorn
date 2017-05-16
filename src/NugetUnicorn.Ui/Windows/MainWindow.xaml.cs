@@ -104,23 +104,23 @@ namespace NugetUnicorn.Ui.Windows
                 x => { Debug.WriteLine($"{x.Key} : {x.Value}"); });
 
             node = node.Select(
-                x => x.Filter<PackageNode>(
-                    y =>
-                        {
-                            var key = y.Key.Id;
-                            if (!restrictions.ContainsKey(key))
-                            {
-                                if (x.Parent == null)
-                                {
-                                    return true;
-                                }
+                           x => x.Filter<PackageNode>(
+                               y =>
+                                   {
+                                       var key = y.Key.Id;
+                                       if (!restrictions.ContainsKey(key))
+                                       {
+                                           if (x.Parent == null)
+                                           {
+                                               return true;
+                                           }
 
-                                Debug.WriteLine($"no restriction for {key}");
-                                return false;
-                            }
-                            var restriction = restrictions[key];
-                            return restriction.Satisfies(y.SemanticVersion);
-                        }))
+                                           Debug.WriteLine($"no restriction for {key}");
+                                           return false;
+                                       }
+                                       var restriction = restrictions[key];
+                                       return restriction.Satisfies(y.SemanticVersion);
+                                   }))
                        .Where(x => x != null)
                        .ToList();
 

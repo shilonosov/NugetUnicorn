@@ -165,6 +165,11 @@
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\ReferenceMetadataBase.cs" />
     <Compile Include="FuzzyMatcher.Matchers\ReferenceMatcher\ReferenceType\SystemReference.cs" />
     <Compile Include="FuzzyMatcher.Matchers\SolutionFileParsers\AppConfigFileReferenceMatcher.cs" />
+    <Compile Include="SourcesParser\Analyzers\DifferentVersionsAnalyzer.cs" />
+    <Compile Include="SourcesParser\Analyzers\DllAndProjectMisreferenceAmalyzer.cs" />
+    <Compile Include="SourcesParser\Analyzers\InconsistentNugetPackagesAnalyzer.cs" />
+    <Compile Include="SourcesParser\Analyzers\IncorrectBindingsAnalyzer.cs" />
+    <Compile Include="SourcesParser\Analyzers\IncorrectRedirectsAndReferencesAnalyzer.cs" />
     <Compile Include="SourcesParser\ProjectParser\AppConfigParser.cs" />
     <Compile Include="SourcesParser\ProjectParser\Models\AppConfigModel.cs" />
     <Compile Include="SourcesParser\ProjectParser\Models\BindingRedirectModel.cs" />

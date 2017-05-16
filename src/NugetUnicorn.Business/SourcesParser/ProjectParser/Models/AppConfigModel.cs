@@ -5,7 +5,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Models
 {
     public class AppConfigModel
     {
-        public BindingRedirectModel[] Bindings { get;  }
+        public BindingRedirectModel[] Bindings { get; }
 
         public AppConfigModel(IEnumerable<BindingRedirectModel> bindings)
         {

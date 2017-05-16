@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 
 using Microsoft.Build.Evaluation;
 
@@ -13,8 +12,6 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 {
     public class AppConfigFileReferenceMatcher : ProbabilityMatch<ProjectItem>
     {
-        private readonly IAppConfigParser _appConfigParser;
-
         private const string CONST_ITEM_TYPE_NONE = "None";
 
         private const string CONST_METADATA_NAME_FILENAME = "Filename";
@@ -24,6 +21,8 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
         private const string CONST_FILENAME_PACKAGES_CONFIG = "app.config";
 
         private const string CONST_METADATA_NAME_FULLPATH = "FullPath";
+
+        private readonly IAppConfigParser _appConfigParser;
 
         public AppConfigFileReferenceMatcher(IAppConfigParser appConfigParser)
         {
@@ -69,9 +68,13 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
         {
             public string FullPath { get; }
 
-            public IList<BindingRedirectModel> RedirectModels { get; private set; }
+            public IList<BindingRedirectModel> RedirectModels { get; }
 
-            public AppConfigFilePropabilityMetadata(ProjectItem sample, ProbabilityMatch<ProjectItem> match, double probability, string fullPath, IList<BindingRedirectModel> redirectModels)
+            public AppConfigFilePropabilityMetadata(ProjectItem sample,
+                                                    ProbabilityMatch<ProjectItem> match,
+                                                    double probability,
+                                                    string fullPath,
+                                                    IList<BindingRedirectModel> redirectModels)
                 : base(sample, match, probability)
             {
                 FullPath = fullPath;

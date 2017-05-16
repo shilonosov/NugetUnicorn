@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
@@ -26,7 +25,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata
             {
                 return new ReferenceInformation(fullPath);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new ApplicationException($"Error parsing {projectPoco.Name} -- {fullPath}", e);
             }

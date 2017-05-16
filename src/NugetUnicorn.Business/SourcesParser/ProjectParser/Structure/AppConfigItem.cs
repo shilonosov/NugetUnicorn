@@ -2,7 +2,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
 {
     public class AppConfigItem : ProjectStructureItem
     {
-        public string RelativePath { get; private set; }
+        public string RelativePath { get; }
 
         public AppConfigItem(string relativePath)
         {
@@ -12,7 +12,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
 
     public class PackagesConfigItem : ProjectStructureItem
     {
-        public string RelativePath { get; private set; }
+        public string RelativePath { get; }
 
         public PackagesConfigItem(string relativePath)
         {

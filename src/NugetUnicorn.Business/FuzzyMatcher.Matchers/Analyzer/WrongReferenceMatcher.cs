@@ -24,9 +24,9 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer
         private void ValidateProjects(IProjectPoco[] projectPocos)
         {
             var duplicateProjectOutputNames = projectPocos.GroupBy(x => x.TargetName)
-                .Where(x => x.Count() > 1)
-                .Select(x => $"Projects [{string.Join(", ", x.Select(y => y.Name))}] has the same output name: [{x.Key}]")
-                .ToArray();
+                                                          .Where(x => x.Count() > 1)
+                                                          .Select(x => $"Projects [{string.Join(", ", x.Select(y => y.Name))}] has the same output name: [{x.Key}]")
+                                                          .ToArray();
             if (duplicateProjectOutputNames.Any())
             {
                 var message = string.Join(Environment.NewLine, duplicateProjectOutputNames);

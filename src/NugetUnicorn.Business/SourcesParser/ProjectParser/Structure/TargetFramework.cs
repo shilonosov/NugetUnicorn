@@ -5,33 +5,17 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
 {
     public class TargetFramework : ProjectStructureItem
     {
-        public static List<string> FolderNames = new List<string>()
-            {
-                "net35",
-                "net40",
-                "net45",
-                "net451",
-                "net452",
-                "net46",
-                "net461",
-                "net462"
-            };
-
-        public static string GetLowerVersionFolder(string shortFolderName)
-        {
-            var thisIndex = FolderNames.IndexOf(shortFolderName);
-            if (thisIndex == -1)
-            {
-                throw new ArgumentException($"framework with short folder name [{shortFolderName}] is not supported at this moment. please issue a bug at https://github.com/shilonosov/NugetUnicorn/issues", nameof(shortFolderName));
-            }
-
-            if (thisIndex == 0)
-            {
-                throw new ApplicationException($"there is no lower version folder name for [{shortFolderName}]");
-            }
-
-            return FolderNames[thisIndex - 1];
-        }
+        public static List<string> FolderNames = new List<string>
+                                                     {
+                                                         "net35",
+                                                         "net40",
+                                                         "net45",
+                                                         "net451",
+                                                         "net452",
+                                                         "net46",
+                                                         "net461",
+                                                         "net462"
+                                                     };
 
         public string ShortFolderName { get; }
 
@@ -41,6 +25,24 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser.Structure
         {
             Version = targetFrameworkVersion;
             ShortFolderName = GetShortFolderName(targetFrameworkVersion);
+        }
+
+        public static string GetLowerVersionFolder(string shortFolderName)
+        {
+            var thisIndex = FolderNames.IndexOf(shortFolderName);
+            if (thisIndex == -1)
+            {
+                throw new ArgumentException(
+                    $"framework with short folder name [{shortFolderName}] is not supported at this moment. please issue a bug at https://github.com/shilonosov/NugetUnicorn/issues",
+                    nameof(shortFolderName));
+            }
+
+            if (thisIndex == 0)
+            {
+                throw new ApplicationException($"there is no lower version folder name for [{shortFolderName}]");
+            }
+
+            return FolderNames[thisIndex - 1];
         }
 
         //TODO: [DS] the one may add missing from this page: https://docs.microsoft.com/en-us/nuget/schema/target-frameworks#supported-frameworks

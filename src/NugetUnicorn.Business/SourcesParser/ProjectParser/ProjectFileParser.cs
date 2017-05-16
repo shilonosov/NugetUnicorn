@@ -22,7 +22,7 @@ namespace NugetUnicorn.Business.SourcesParser.ProjectParser
         public ProjectPoco Parse(string fullPath)
         {
             var projectStructure = Observable.Create<ProjectStructureItem>(x => Parse(fullPath, x))
-                .ToEnumerable();
+                                             .ToEnumerable();
 
             return new ProjectPoco(fullPath, projectStructure);
         }

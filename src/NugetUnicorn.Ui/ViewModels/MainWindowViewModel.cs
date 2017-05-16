@@ -16,8 +16,9 @@ namespace NugetUnicorn.Ui.ViewModels
 {
     public class MainWindowViewModel
     {
-        private NewThreadScheduler _newThreadScheduler;
-        public ReactiveCollection<PackageControlViewModel> Packages { get; private set; }
+        private readonly NewThreadScheduler _newThreadScheduler;
+
+        public ReactiveCollection<PackageControlViewModel> Packages { get; }
 
         public ReactiveProperty<string> SelectedSolutionProperty { get; }
 
@@ -47,11 +48,12 @@ namespace NugetUnicorn.Ui.ViewModels
             SelectSolutionCommand = new ReactiveCommand(UiSwitch);
             SelectSolutionCommand.Select(x => SelectSolutionToInspect())
                                  .Where(x => x != null)
-                                 .Do(x =>
-                {
-                    UiSwitch.Value = false;
-                    ReportString.Value = string.Empty;
-                })
+                                 .Do(
+                                     x =>
+                                         {
+                                             UiSwitch.Value = false;
+                                             ReportString.Value = string.Empty;
+                                         })
                                  .Do(reactivePropertyObserverBridgeStringReplace)
                                  .Select(Anazyle)
                                  .Switch()
@@ -63,8 +65,8 @@ namespace NugetUnicorn.Ui.ViewModels
         private IObservable<Message.Info> Anazyle(string x)
         {
             return new SolutionReferenseAnalyzer(_newThreadScheduler, x).Run()
-                                                                             .Finally(() => UiSwitch.Value = true)
-                                                                             .Catch<Message.Info, Exception>(y => Observable.Return(new Message.Fatal($"error: {y.Message}")));
+                                                                        .Finally(() => UiSwitch.Value = true)
+                                                                        .Catch<Message.Info, Exception>(y => Observable.Return(new Message.Fatal($"error: {y.Message}")));
         }
 
         private string SelectSolutionToInspect()
