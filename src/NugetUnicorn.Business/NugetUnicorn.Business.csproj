@@ -36,9 +36,11 @@
     <Reference Include="Microsoft.Build">
       <HintPath>C:\Program Files (x86)\MSBuild\14.0\Bin\Microsoft.Build.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework">
       <HintPath>C:\Program Files (x86)\MSBuild\14.0\Bin\Microsoft.Build.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
     </Reference>
@@ -191,7 +193,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourcesParser\Message.cs" />
     <Compile Include="SourcesParser\ProjectParser\IProjectPoco.cs" />
-    <Compile Include="SourcesParser\ProjectParser\PackagesConfigParser.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\Parser\IXmlModelBuilder.cs" />
     <Compile Include="SourcesParser\ProjectParser\Sax\Parser\ProjectStructureModelBuilder.cs" />
     <Compile Include="SourcesParser\ProjectParser\Structure\TargetFramework.cs" />
