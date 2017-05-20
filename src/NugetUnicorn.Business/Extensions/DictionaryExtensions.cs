@@ -16,5 +16,14 @@ namespace NugetUnicorn.Business.Extensions
         {
             return dictionary.ToDictionary(x => x.Key, x => transformationSelector(x.Key, x.Value));
         }
+
+        public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            if (dictionary.TryGetValue(key, out TValue result))
+            {
+                return result;
+            }
+            return default(TValue);
+        }
     }
 }

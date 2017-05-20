@@ -6,12 +6,15 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher
 {
     public class ReferenceInformation
     {
+        public string FullPath { get; }
+
         public string AssemblyName { get; }
 
         public string Version { get; }
 
         public ReferenceInformation(string fullPath)
         {
+            FullPath = fullPath;
             if (!Path.IsPathRooted(fullPath))
             {
                 throw new ArgumentException($"expected full path, but relative received - {fullPath}");

@@ -20,7 +20,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata
 
         public virtual ReferenceInformation GetReferenceInformation(ProjectPoco projectPoco)
         {
-            var fullPath = Path.IsPathRooted(_targetPath) ? _targetPath : Path.Combine(projectPoco.ProjectFilePath.DirectoryPath, _targetPath);
+            var fullPath = Path.GetFullPath(Path.IsPathRooted(_targetPath) ? _targetPath : Path.Combine(projectPoco.ProjectFilePath.DirectoryPath, _targetPath));
             try
             {
                 return new ReferenceInformation(fullPath);
