@@ -64,7 +64,7 @@ namespace NugetUnicorn.Business.SourcesParser
                 string frameworkName;
                 try
                 {
-                    frameworkName = GetFrameworkIdentifier(projectPoco);
+                    frameworkName = GetFrameworkIdentifier(projectPoco, Path.GetDirectoryName(solutionPath));
                 }
                 catch (Exception e)
                 {
@@ -144,10 +144,11 @@ namespace NugetUnicorn.Business.SourcesParser
             return items;
         }
 
-        private static string GetFrameworkIdentifier(IProjectPoco x)
+        private static string GetFrameworkIdentifier(IProjectPoco x, string solutionDirectory)
         {
             using (var pc = new ProjectCollection())
             {
+                pc.SetGlobalProperty("SolutionDir", solutionDirectory);
                 pc.LoadProject(x.ProjectFilePath.FullPath);
                 var project = pc.GetLoadedProjects(x.ProjectFilePath.FullPath)
                                 .First();
