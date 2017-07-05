@@ -3,13 +3,11 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
-
 using CommandLine;
 using CommandLine.Text;
-
 using NugetUnicorn.Business.SourcesParser;
 
-namespace NUgetUnicorn.Console
+namespace NugetUnicorn.Console
 {
     internal class Options
     {

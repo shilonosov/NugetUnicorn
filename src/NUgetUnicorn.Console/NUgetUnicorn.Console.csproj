@@ -7,8 +7,8 @@
     <ProjectGuid>{2C4E555C-0090-4592-ACA2-E41340E96B94}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUgetUnicorn.Console</RootNamespace>
-    <AssemblyName>NUgetUnicorn.Console</AssemblyName>
+    <RootNamespace>NugetUnicorn.Console</RootNamespace>
+    <AssemblyName>NugetUnicorn.Console</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
