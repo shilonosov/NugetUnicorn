@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Exceptions;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
+using NugetUnicorn.Dto;
+using NugetUnicorn.Utils.FuzzyMatcher.Engine;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer
 {

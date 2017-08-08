@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
+using NugetUnicorn.Dto;
 
-namespace NugetUnicorn.Business.SourcesParser
+namespace NugetUnicorn.Business.SourcesParser.Analyzers
 {
     public static class DifferentVersionsAnalyzer
     {

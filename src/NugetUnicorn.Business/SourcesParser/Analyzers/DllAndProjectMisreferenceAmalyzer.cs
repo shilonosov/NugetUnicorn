@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-
-using NugetUnicorn.Business.Extensions;
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
+using NugetUnicorn.Dto;
+using NugetUnicorn.Utils.Extensions;
+using NugetUnicorn.Utils.FuzzyMatcher.Engine;
 
-namespace NugetUnicorn.Business.SourcesParser
+namespace NugetUnicorn.Business.SourcesParser.Analyzers
 {
     public class DllAndProjectMisreferenceAmalyzer
     {

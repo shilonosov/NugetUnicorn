@@ -1,25 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
-
 using Microsoft.Build.Evaluation;
-
-using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
-
+using NugetUnicorn.Dto;
+using NugetUnicorn.Utils.Extensions;
 using NuGet.Frameworks;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 
-using static System.String;
-
-namespace NugetUnicorn.Business.SourcesParser
+namespace NugetUnicorn.Business.SourcesParser.Analyzers
 {
     public class InconsistentNugetPackagesAnalyzer
     {
@@ -37,7 +31,7 @@ namespace NugetUnicorn.Business.SourcesParser
                                x =>
                                    {
                                        var projectReferences = referencesByProjects[x];
-                                       if (IsNullOrEmpty(x.PackagesConfigPath))
+                                       if (String.IsNullOrEmpty(x.PackagesConfigPath))
                                        {
                                            return new[]
                                                       {
@@ -149,6 +143,7 @@ namespace NugetUnicorn.Business.SourcesParser
             using (var pc = new ProjectCollection())
             {
                 pc.SetGlobalProperty("SolutionDir", solutionDirectory);
+                pc.SetGlobalProperty("MSBuildProgramFiles32", Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"));
                 pc.LoadProject(x.ProjectFilePath.FullPath);
                 var project = pc.GetLoadedProjects(x.ProjectFilePath.FullPath)
                                 .First();

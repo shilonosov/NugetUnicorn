@@ -1,7 +1,7 @@
 ﻿using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Exceptions;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
-
+using NugetUnicorn.Dto;
 using NUnit.Framework;
 
 using Rhino.Mocks;

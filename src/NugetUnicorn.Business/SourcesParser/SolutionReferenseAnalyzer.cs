@@ -6,16 +6,16 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using NugetUnicorn.Business.Extensions;
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType;
-using NugetUnicorn.Business.SourcesParser.ProjectParser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
-
+using NugetUnicorn.Business.SourcesParser.Analyzers;
+using NugetUnicorn.Business2;
+using NugetUnicorn.Dto;
+using NugetUnicorn.Dto.Structure;
+using NugetUnicorn.Utils.Extensions;
+using NugetUnicorn.Utils.FuzzyMatcher.Engine;
 using ProjectReference = NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType.ProjectReference;
 
 namespace NugetUnicorn.Business.SourcesParser
@@ -90,10 +90,14 @@ namespace NugetUnicorn.Business.SourcesParser
                     referencesByProjects,
                     referenceMetadatas);
 
+                var wordsAnalyzer = new ForbiddenWordsAnalyzer("ForbiddenWords.txt", projects);
+                var forbiddedWords = wordsAnalyzer.Analyze();
+
                 var observations = projectReferenceVsDirectDllReference.Merge(incorrectReferences)
                                                                        .Merge(differentVersionsReferencesErrors)
                                                                        //.Merge(assemblyRedirectsVsReferencesErrors)
                                                                        .Merge(inconsistentNugetPackageReferences)
+                                                                       .Merge(forbiddedWords)
                                                                        .Select(
                                                                            x =>
                                                                                {

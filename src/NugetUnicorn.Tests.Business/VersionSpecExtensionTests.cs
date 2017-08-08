@@ -1,5 +1,4 @@
-﻿using NugetUnicorn.Business.Extensions;
-
+﻿using NugetUnicorn.Utils.Extensions;
 using NuGet;
 
 using NUnit.Framework;

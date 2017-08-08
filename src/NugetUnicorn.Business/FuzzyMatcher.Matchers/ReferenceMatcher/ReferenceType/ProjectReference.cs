@@ -1,6 +1,6 @@
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Metadata;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+using NugetUnicorn.Dto.Structure;
+using NugetUnicorn.Utils.FuzzyMatcher.Engine;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType
 {
@@ -8,7 +8,7 @@ namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.Reference
     {
         public override ProbabilityMatchMetadata<ReferenceBase> CalculateProbability(ReferenceBase dataSample)
         {
-            var projectReference = dataSample as SourcesParser.ProjectParser.Structure.ProjectReference;
+            var projectReference = dataSample as NugetUnicorn.Dto.Structure.ProjectReference;
             if (projectReference != null)
             {
                 return new ProjectMetadata(projectReference, this, 1);

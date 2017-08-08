@@ -6,6 +6,7 @@ using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
+using NugetUnicorn.Dto;
 
 namespace NugetUnicorn.Business.SourcesParser
 {
@@ -19,7 +20,6 @@ namespace NugetUnicorn.Business.SourcesParser
         }
 
         public static IEnumerable<ProjectPoco> GetProjects(string solutionFilePath)
-            //public static IEnumerable<Project> GetProjects(string solutionFilePath)
         {
             var solutionFile = SolutionFile.Parse(solutionFilePath);
             return solutionFile.ProjectsInOrder

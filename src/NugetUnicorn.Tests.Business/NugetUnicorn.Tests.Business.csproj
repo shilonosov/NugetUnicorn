@@ -48,8 +48,8 @@
     <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -102,10 +102,19 @@
       <Project>{79721f58-a1bd-4b03-8958-2560eb16d1ad}</Project>
       <Name>NugetUnicorn.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NugetUnicorn.Dto\NugetUnicorn.Dto.csproj">
+      <Project>{527a3ba1-e5b1-4527-ac62-83bb03203e8a}</Project>
+      <Name>NugetUnicorn.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NugetUnicorn.Utils\NugetUnicorn.Utils.csproj">
+      <Project>{5f90025a-b123-49b0-94f3-54268ae7ce02}</Project>
+      <Name>NugetUnicorn.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestSamples\SampleProject.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

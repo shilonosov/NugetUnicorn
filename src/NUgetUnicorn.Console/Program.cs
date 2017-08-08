@@ -22,7 +22,7 @@ namespace NugetUnicorn.Console
         {
             var usage = new StringBuilder();
             usage.AppendLine("NugetUnicorn 1.0");
-            usage.AppendLine("You can always read the code (hehehe) on a github: https://github.com/shilonosov/NugetUnicorn");
+            usage.AppendLine("You can always rea`d the code (hehehe) on a github: https://github.com/shilonosov/NugetUnicorn");
             usage.Append(HelpText.AutoBuild(this));
             return usage.ToString();
         }

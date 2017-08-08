@@ -1,5 +1,5 @@
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+using NugetUnicorn.Dto.Structure;
+using NugetUnicorn.Utils.FuzzyMatcher.Engine;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.ReferenceMatcher.ReferenceType
 {

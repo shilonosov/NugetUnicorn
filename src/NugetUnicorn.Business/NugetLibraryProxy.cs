@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using NugetUnicorn.Business.Dto;
-using NugetUnicorn.Business.Extensions;
-
+using NugetUnicorn.Utils.Extensions;
 using NuGet;
 
 namespace NugetUnicorn.Business

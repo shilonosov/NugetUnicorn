@@ -1,9 +1,7 @@
 ﻿using System.IO;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser;
-
+using NugetUnicorn.Utils.Sax.Parser;
 using NUnit.Framework;
 
 namespace NugetUnicorn.Tests.Business

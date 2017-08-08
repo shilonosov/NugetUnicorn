@@ -9,11 +9,10 @@ using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 
 using NugetUnicorn.Business;
 using NugetUnicorn.Business.Dto;
-using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Ui.Business;
 using NugetUnicorn.Ui.Models;
 using NugetUnicorn.Ui.ViewModels;
-
+using NugetUnicorn.Utils.Extensions;
 using NuGet;
 
 namespace NugetUnicorn.Ui.Windows

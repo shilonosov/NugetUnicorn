@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
-
-using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Models;
+using NugetUnicorn.Utils.Extensions;
 
 namespace NugetUnicorn.Business.SourcesParser.ProjectParser
 {

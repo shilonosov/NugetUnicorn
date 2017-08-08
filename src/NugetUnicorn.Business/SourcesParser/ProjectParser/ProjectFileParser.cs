@@ -4,9 +4,10 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Sax;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Sax.Parser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+using NugetUnicorn.Dto;
+using NugetUnicorn.Dto.Structure;
+using NugetUnicorn.Utils.Sax;
+using NugetUnicorn.Utils.Sax.Parser;
 
 namespace NugetUnicorn.Business.SourcesParser.ProjectParser
 {

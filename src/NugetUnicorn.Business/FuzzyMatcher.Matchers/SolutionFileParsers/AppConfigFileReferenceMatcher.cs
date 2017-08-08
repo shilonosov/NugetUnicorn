@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Build.Evaluation;
-
-using NugetUnicorn.Business.FuzzyMatcher.Engine;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
 using NugetUnicorn.Business.SourcesParser.ProjectParser.Models;
+using NugetUnicorn.Utils.FuzzyMatcher.Engine;
 
 namespace NugetUnicorn.Business.FuzzyMatcher.Matchers.SolutionFileParsers
 {

@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-using NugetUnicorn.Business.Extensions;
 using NugetUnicorn.Business.SourcesParser.ProjectParser;
-using NugetUnicorn.Business.SourcesParser.ProjectParser.Structure;
+using NugetUnicorn.Dto;
+using NugetUnicorn.Dto.Structure;
+using NugetUnicorn.Utils.Extensions;
 
-namespace NugetUnicorn.Business.SourcesParser
+namespace NugetUnicorn.Business.SourcesParser.Analyzers
 {
     public static class IncorrectRedirectsAndReferencesAnalyzer
     {

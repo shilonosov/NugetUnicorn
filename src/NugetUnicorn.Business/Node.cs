@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NugetUnicorn.Business.Dto;
-using NugetUnicorn.Business.Extensions;
+using NugetUnicorn.Utils.Extensions;
 
 namespace NugetUnicorn.Business
 {
