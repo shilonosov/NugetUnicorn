@@ -143,7 +143,6 @@ namespace NugetUnicorn.Business.SourcesParser.Analyzers
             using (var pc = new ProjectCollection())
             {
                 pc.SetGlobalProperty("SolutionDir", solutionDirectory);
-                pc.SetGlobalProperty("MSBuildProgramFiles32", Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"));
                 pc.LoadProject(x.ProjectFilePath.FullPath);
                 var project = pc.GetLoadedProjects(x.ProjectFilePath.FullPath)
                                 .First();
