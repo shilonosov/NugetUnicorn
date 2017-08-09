@@ -8,6 +8,7 @@ open NugetUnicorn.Dto
 type ForbiddenWordsAnalyzer(forbiddenWordsFilePath: string, projectPocos: IEnumerable<ProjectPoco>) = 
     let forbiddenWords = 
         File.ReadAllLines(forbiddenWordsFilePath)
+        |> Seq.map (fun x -> x.ToLowerInvariant())
     
     let projectCodeFiles =
         projectPocos
@@ -16,7 +17,7 @@ type ForbiddenWordsAnalyzer(forbiddenWordsFilePath: string, projectPocos: IEnume
         let findForbiddenWordsInLines (itemPath: string) (lines: IEnumerable<System.String>) =
             let getForbiddenWords (index: int) (line: System.String) =
                 forbiddenWords
-                |> Seq.where (fun word -> line.Contains(word))
+                |> Seq.where (fun word -> line.ToLowerInvariant().Contains(word))
                 |> Seq.map (fun word -> (sprintf "file %A line %i has invalid word %A" itemPath index word))
 
             lines
