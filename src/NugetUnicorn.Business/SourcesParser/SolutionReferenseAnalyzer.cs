@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NugetUnicorn.Business.FuzzyMatcher.Matchers.Analyzer;
@@ -35,12 +36,7 @@ namespace NugetUnicorn.Business.SourcesParser
         public IObservable<Message.Info> Run()
         {
             return Observable.Create<Message.Info>(
-                x =>
-                    {
-                        return _scheduler.ScheduleAsync(
-                            async (scheduler, cancellationToken) =>
-                                await AnalyzeSolution(_solutionPath, x, cancellationToken));
-                    });
+                x => _scheduler.ScheduleAsync(async (s, c) => await AnalyzeSolution(_solutionPath, x, c)));
         }
 
         private static Task AnalyzeSolution(string solutionPath,
@@ -90,7 +86,7 @@ namespace NugetUnicorn.Business.SourcesParser
                     referencesByProjects,
                     referenceMetadatas);
 
-                var wordsAnalyzer = new ForbiddenWordsAnalyzer("ForbiddenWords.txt", projects);
+                var wordsAnalyzer = new ForbiddenWordsAnalyzer(GetForbiddenWordsFilePath(), projects);
                 var forbiddedWords = wordsAnalyzer.Analyze();
 
                 var observations = projectReferenceVsDirectDllReference.Merge(incorrectReferences)
@@ -122,6 +118,15 @@ namespace NugetUnicorn.Business.SourcesParser
                 observer.OnNext(new Message.Info("analysis completed."));
                 observer.OnCompleted();
             }
+        }
+
+        private static string GetForbiddenWordsFilePath()
+        {
+            var runningAssembly = Assembly.GetEntryAssembly();
+            var runningAssemblyCodeBase = runningAssembly.Location;
+            var directoryName = Path.GetDirectoryName(runningAssemblyCodeBase) ?? ".";
+
+            return Path.Combine(directoryName, "ForbiddenWords.txt");
         }
 
         private static IDictionary<ProjectPoco, IEnumerable<ReferenceInformation>> ComposeReferencesByProjects(
